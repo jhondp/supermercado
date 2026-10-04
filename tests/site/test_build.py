@@ -244,3 +244,13 @@ def test_product_name_is_escaped_and_chart_json_survives(tmp_path: Path) -> None
 def test_methodology_computes_threshold_from_real_basket(tmp_path: Path) -> None:
     build_site(load_config(CONFIG_DIR), tmp_path / "data", tmp_path / "dist")
     assert "19 de 23 productos" in read(tmp_path / "dist" / "metodologia" / "index.html")
+
+
+def test_chartjs_script_has_subresource_integrity(built: Path) -> None:
+    html = read(built / "producto" / "rice" / "index.html")
+    assert (
+        'integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="'
+        in html
+    )
+    assert 'crossorigin="anonymous"' in html
+    assert 'referrerpolicy="no-referrer"' in html
