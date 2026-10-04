@@ -20,7 +20,11 @@ API = "https://nextgentheadless.instaleap.io/api/v3"
 
 def make_adapter(*responses, **overrides):
     transport = FakeTransport(list(responses))
-    settings = {"base_url": API, "store_ref": "580", "params": {"client_id": "TEST_CLIENT"}}
+    settings = {
+        "base_url": API,
+        "store_ref": "580",
+        "params": {"client_id": "TEST_CLIENT", "unconditional_promo_types": "DISCOUNT"},
+    }
     settings.update(overrides)
     return AcuentaAdapter(
         make_client(transport), make_store_config("aCuenta", **settings)
@@ -115,10 +119,33 @@ def test_client_id_is_required_before_any_request(params) -> None:
     assert transport.calls == []
 
 
+TYPES = frozenset({"discount"})
+
+
+def test_unknown_promotion_type_is_not_a_promo() -> None:
+    promotion = {"type": "MEMBER", "isActive": True, "conditions": [{"price": 500, "quantity": 1}]}
+    assert (
+        parse_products(product(promotion=promotion), "searchProducts", TYPES)[0].promo_price is None
+    )
+
+
+def test_empty_allowlist_means_no_promos() -> None:
+    adapter, _ = make_adapter(fixture_response("acuenta", "search.json"), params={"client_id": "X"})
+    assert adapter.search("arroz")[1].promo_price is None
+
+
+@pytest.mark.parametrize("bad", [0, -1, float("inf"), float("nan"), "abc", True])
+def test_click_multiplier_must_be_finite_and_positive(bad) -> None:
+    with pytest.raises(ResponseShapeError, match="aCuenta"):
+        parse_products(product(clickMultiplier=bad), "searchProducts", TYPES)
+
+
 @pytest.mark.parametrize("kind", ["nx$", "NX$", "MXN"])
 def test_conditional_promotions_never_become_promo_price(kind) -> None:
     promotion = {"type": kind, "isActive": True, "conditions": [{"price": 500, "quantity": 1}]}
-    assert parse_products(product(promotion=promotion), "searchProducts")[0].promo_price is None
+    assert (
+        parse_products(product(promotion=promotion), "searchProducts", TYPES)[0].promo_price is None
+    )
 
 
 def test_multi_quantity_and_inactive_promotions_are_ignored() -> None:
@@ -128,15 +155,17 @@ def test_multi_quantity_and_inactive_promotions_are_ignored() -> None:
         "isActive": False,
         "conditions": [{"price": 500, "quantity": 1}],
     }
-    assert parse_products(product(promotion=multi), "searchProducts")[0].promo_price is None
-    assert parse_products(product(promotion=inactive), "searchProducts")[0].promo_price is None
+    assert parse_products(product(promotion=multi), "searchProducts", TYPES)[0].promo_price is None
+    assert (
+        parse_products(product(promotion=inactive), "searchProducts", TYPES)[0].promo_price is None
+    )
 
 
 def test_promo_must_be_below_price_and_is_rounded_half_up() -> None:
     higher = {"type": "DISCOUNT", "isActive": True, "conditions": [{"price": 1200, "quantity": 1}]}
-    assert parse_products(product(promotion=higher), "searchProducts")[0].promo_price is None
+    assert parse_products(product(promotion=higher), "searchProducts", TYPES)[0].promo_price is None
     half = {"type": "DISCOUNT", "isActive": True, "conditions": [{"price": 899.5, "quantity": 1}]}
-    assert parse_products(product(promotion=half), "searchProducts")[0].promo_price == 900
+    assert parse_products(product(promotion=half), "searchProducts", TYPES)[0].promo_price == 900
 
 
 def test_price_rounds_half_up() -> None:
@@ -152,9 +181,15 @@ def test_card_price_is_never_derived_from_promotions() -> None:
     "bad",
     [
         {"promotion": "oops"},
-        {"promotion": {"isActive": True, "conditions": "x"}},
-        {"promotion": {"isActive": True, "conditions": ["x"]}},
-        {"promotion": {"isActive": True, "conditions": [{"price": "abc", "quantity": 1}]}},
+        {"promotion": {"type": "DISCOUNT", "isActive": True, "conditions": "x"}},
+        {"promotion": {"type": "DISCOUNT", "isActive": True, "conditions": ["x"]}},
+        {
+            "promotion": {
+                "type": "DISCOUNT",
+                "isActive": True,
+                "conditions": [{"price": "abc", "quantity": 1}],
+            }
+        },
         {"clickMultiplier": "abc"},
         {"stock": "many"},
         {"price": "abc"},
@@ -163,7 +198,7 @@ def test_card_price_is_never_derived_from_promotions() -> None:
 )
 def test_malformed_item_data_raises_shape_error_naming_the_store(bad) -> None:
     with pytest.raises(ResponseShapeError, match="aCuenta"):
-        parse_products(product(**bad), "searchProducts")
+        parse_products(product(**bad), "searchProducts", TYPES)
 
 
 def test_non_dict_product_raises_shape_error() -> None:
