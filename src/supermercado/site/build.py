@@ -16,7 +16,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from supermercado.config import AppConfig
 from supermercado.domain.models import BasketItem, Category, PriceObservation, Status, Unit
-from supermercado.domain.ranking import rank_stores
+from supermercado.domain.ranking import MIN_COVERAGE, rank_stores
 from supermercado.domain.validation import apply_clearances
 from supermercado.site.format import format_change, format_clp, format_date_es
 
@@ -63,12 +63,14 @@ def chart_data(
     series = []
     for store in stores:
         points: list[dict[str, Any]] = []
-        previous_sku: str | None = None
+        # Compared against the last *plotted* SKU so a change that happens in a week
+        # that is not plotted (under review, out of stock) still marks the next point.
+        plotted_sku: str | None = None
         for obs in sorted((o for o in rows if o.store == store), key=lambda o: o.week):
-            changed = previous_sku is not None and obs.sku != previous_sku
-            previous_sku = obs.sku
             if obs.status != Status.OK or not obs.available:
                 continue
+            changed = plotted_sku is not None and obs.sku != plotted_sku
+            plotted_sku = obs.sku
             points.append(
                 {
                     "week": obs.week,
@@ -169,7 +171,9 @@ def _environment() -> Environment:
 
 
 def _script_json(data: dict[str, Any]) -> str:
-    return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    # Escaping every "<" covers "</script>" and "<!--" (which would switch the HTML parser
+    # into the script-data-escaped state) while staying valid JSON.
+    return json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
 
 
 def _write(path: Path, html: str) -> None:
@@ -192,13 +196,13 @@ def render_site(config: AppConfig, observations: Sequence[PriceObservation], out
         "stores": stores,
         "comunas": {store: config.stores[store].comuna for store in stores},
         "basket_size": len(config.basket),
-        "min_items": math.ceil(0.8 * len(config.basket)),
+        "min_items": math.ceil(MIN_COVERAGE * len(config.basket)),
     }
     env = _environment()
     out_dir.mkdir(parents=True, exist_ok=True)
     shutil.copytree(PACKAGE_DIR / "static", out_dir / "static", dirs_exist_ok=True)
 
-    ranking = rank_stores(current, previous, config.basket, stores)
+    ranking = rank_stores(current, previous, config.basket, stores, min_coverage=MIN_COVERAGE)
     _write(
         out_dir / "index.html",
         env.get_template("index.html").render(root="./", page="home", ranking=ranking, **common),

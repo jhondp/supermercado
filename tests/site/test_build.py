@@ -7,9 +7,10 @@ import pytest
 
 from factories import make_config, make_item, make_match, make_obs
 from supermercado.config import load_config
-from supermercado.domain.models import Category, Unit
+from supermercado.domain.models import Category, Status, Unit
 from supermercado.pipeline.storage import write_week
-from supermercado.site.build import build_site, load_observations
+from supermercado.site import build as site_build
+from supermercado.site.build import build_site, chart_data, load_observations
 
 CONFIG_DIR = Path(__file__).resolve().parents[2] / "config"
 ITEMS = [
@@ -254,3 +255,54 @@ def test_chartjs_script_has_subresource_integrity(built: Path) -> None:
     )
     assert 'crossorigin="anonymous"' in html
     assert 'referrerpolicy="no-referrer"' in html
+
+
+def test_methodology_and_ranking_share_the_coverage_constant(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(site_build, "MIN_COVERAGE", 0.5)
+    build_site(load_config(CONFIG_DIR), tmp_path / "data", tmp_path / "dist")
+    assert "12 de 23 productos" in read(tmp_path / "dist" / "metodologia" / "index.html")
+
+
+W41 = {"week": "2026-W41", "scraped_at": datetime(2026, 10, 5, 9, 0, tzinfo=UTC)}
+
+
+def _sku_switch_rows():
+    return [
+        make_obs(**W39, store="lider", item_id="rice", sku="A", unit_price=1290),
+        make_obs(store="lider", item_id="rice", sku="B", unit_price=9999, status=Status.SUSPICIOUS),
+        make_obs(**W41, store="lider", item_id="rice", sku="B", unit_price=1300),
+    ]
+
+
+def test_sku_change_in_an_unplotted_week_marks_the_next_plotted_point() -> None:
+    chart = chart_data("rice", _sku_switch_rows(), ["lider"], {"lider": "Lider"})
+    [lider] = chart["series"]
+    assert [(p["week"], p["sku"], p["sku_changed"]) for p in lider["points"]] == [
+        ("2026-W39", "A", False),
+        ("2026-W41", "B", True),
+    ]
+
+
+def test_sku_change_in_an_unplotted_week_is_listed(tmp_path: Path) -> None:
+    rows = _sku_switch_rows()
+    for week in ("2026-W39", "2026-W40", "2026-W41"):
+        write_week(
+            tmp_path / "data", week, [o for o in rows if o.week == week], replace_stores={"lider"}
+        )
+    build_site(site_config(), tmp_path / "data", tmp_path / "dist")
+    html = read(tmp_path / "dist" / "producto" / "rice" / "index.html")
+    assert "semana 2026-W41: SKU A → B" in html
+
+
+def test_chart_json_neutralizes_html_comment_openers(tmp_path: Path) -> None:
+    evil = "<!--<script>"
+    config = site_config()
+    config.stores["lider"] = config.stores["lider"].model_copy(update={"name": evil})
+    html = _rice_page(tmp_path, [make_obs(store="lider", item_id="rice", sku=evil)], config=config)
+    assert evil not in html
+    chart = _chart(html)
+    lider = next(s for s in chart["series"] if s["store"] == "lider")
+    assert lider["label"] == evil
+    assert lider["points"][-1]["sku"] == evil
