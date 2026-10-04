@@ -6,9 +6,26 @@ import json as _json
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from math import isfinite
 from typing import Any, Protocol
 
 from supermercado.domain.models import Listing
+
+
+def positive_multiplier(value: Any, label: str) -> float:
+    """Store pack/weight multiplier: 1.0 when absent, else a finite positive number.
+
+    Raises TypeError (bool or non-number) or ValueError (non-finite or not positive);
+    adapters wrap both into ResponseShapeError naming the store.
+    """
+    if value is None:
+        return 1.0
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(f"{label} {value!r} is not a number")
+    multiplier = float(value)
+    if not isfinite(multiplier) or multiplier <= 0:
+        raise ValueError(f"{label} {value!r} must be finite and positive")
+    return multiplier
 
 
 class AdapterError(Exception):

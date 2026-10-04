@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
-from math import isfinite
 from typing import Any
 
 from supermercado.config import StoreConfig
 from supermercado.domain.models import Listing, SoldBy, Unit
 from supermercado.domain.units import UnknownUnitError, normalize, parse_size
-from supermercado.stores.base import AdapterError, HttpClient, RawResponse, ResponseShapeError
+from supermercado.stores.base import (
+    AdapterError,
+    HttpClient,
+    RawResponse,
+    ResponseShapeError,
+    positive_multiplier,
+)
 
 SITE_URL = "https://www.acuenta.cl"
 _FIELDS = (
@@ -81,17 +86,6 @@ def _size(product: dict[str, Any]) -> tuple[float, Unit] | None:
     return parsed
 
 
-def _multiplier(value: Any) -> float:
-    if value is None:
-        return 1.0
-    if isinstance(value, bool):
-        raise TypeError("clickMultiplier is not a number")
-    multiplier = float(value)
-    if not isfinite(multiplier) or multiplier <= 0:
-        raise ValueError(f"clickMultiplier {value!r} must be finite and positive")
-    return multiplier
-
-
 def _listing(product: dict[str, Any], promo_types: frozenset[str]) -> Listing:
     if not isinstance(product["sku"], (str, int)):
         raise TypeError("sku is not a string")
@@ -107,7 +101,7 @@ def _listing(product: dict[str, Any], promo_types: frozenset[str]) -> Listing:
         size=size,
         unit=unit,
         sold_by=SoldBy.WEIGHT if weighted else SoldBy.UNIT,
-        multiplier=_multiplier(product.get("clickMultiplier")),
+        multiplier=positive_multiplier(product.get("clickMultiplier"), "clickMultiplier"),
         price=price,
         promo_price=_promo(product, price, promo_types),
         available=bool(product.get("isAvailable")) and stock > 0,

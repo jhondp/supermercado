@@ -20,6 +20,7 @@ from supermercado.stores.base import (
     HttpError,
     RawResponse,
     ResponseShapeError,
+    positive_multiplier,
 )
 
 log = logging.getLogger(__name__)
@@ -53,17 +54,6 @@ def _price(block: Any) -> int | None:
     return amount if amount > 0 else None
 
 
-def _multiplier(value: Any) -> float:
-    if value is None:
-        return 1.0
-    if isinstance(value, bool):
-        raise TypeError("averageWeight is not a number")
-    multiplier = float(value)
-    if not isfinite(multiplier) or multiplier <= 0:
-        raise ValueError(f"averageWeight {value!r} must be finite and positive")
-    return multiplier
-
-
 def _listing(product: dict[str, Any]) -> Listing:
     sku = product["usItemId"]
     if not isinstance(sku, (str, int)) or isinstance(sku, bool) or sku == "":
@@ -89,7 +79,9 @@ def _listing(product: dict[str, Any]) -> Listing:
         size=size,
         unit=unit,
         sold_by=SoldBy.WEIGHT if weighted else SoldBy.UNIT,
-        multiplier=_multiplier(product.get("averageWeight")) if weighted else 1.0,
+        multiplier=positive_multiplier(product.get("averageWeight"), "averageWeight")
+        if weighted
+        else 1.0,
         price=was if on_sale else current,
         promo_price=current if on_sale else None,
         available=product.get("availabilityStatus") == "IN_STOCK",

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from decimal import InvalidOperation
-from math import isfinite
 from typing import Any
 
 from supermercado.config import StoreConfig
@@ -15,6 +14,7 @@ from supermercado.stores.base import (
     RawResponse,
     ResponseShapeError,
     fetch_by_search,
+    positive_multiplier,
 )
 
 SEARCH_PATH = "/catalog/product/search"
@@ -40,17 +40,6 @@ def _unit_price(value: Any) -> int | None:
         return _amount(value)
     except (ValueError, TypeError):
         return None
-
-
-def _multiplier(value: Any) -> float:
-    if value is None:
-        return 1.0
-    if isinstance(value, bool):
-        raise TypeError("unitMultiplier is not a number")
-    multiplier = float(value)
-    if not isfinite(multiplier) or multiplier <= 0:
-        raise ValueError(f"unitMultiplier {value!r} must be finite and positive")
-    return multiplier
 
 
 def _promo_tag(detail: Any) -> str:
@@ -79,7 +68,7 @@ def _listing(entry: dict[str, Any]) -> Listing:
     lower = current if current and listed and current < listed else None
     open_offer = lower is not None and _promo_tag(entry.get("priceDetail")) in _OPEN_OFFER_TAGS
     weighted = str(item.get("measurementUnit") or "").lower() == "kg"
-    multiplier = _multiplier(item.get("unitMultiplier"))
+    multiplier = positive_multiplier(item.get("unitMultiplier"), "unitMultiplier")
     name = str(item.get("nameComplete") or item.get("name") or "")
     if weighted:
         size, unit = multiplier, Unit.KG

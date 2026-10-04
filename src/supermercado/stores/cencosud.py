@@ -16,6 +16,7 @@ from supermercado.stores.base import (
     HttpError,
     RawResponse,
     ResponseShapeError,
+    positive_multiplier,
 )
 
 BATCH_SIZE = 40
@@ -62,7 +63,7 @@ def _listing(product: dict[str, Any], item: dict[str, Any], site_url: str) -> Li
     regular = _positive_int(item.get("listPrice")) or current
     promo = current if current and regular and current < regular else None
     weighted = str(item.get("measurementUnit") or "").lower() == "kg"
-    multiplier = float(item.get("unitMultiplier") or 1)
+    multiplier = positive_multiplier(item.get("unitMultiplier"), "unitMultiplier")
     name = str(item.get("name") or "")
     if weighted:
         size, unit = multiplier, Unit.KG

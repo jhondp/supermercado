@@ -236,3 +236,10 @@ def test_weighted_size_comes_from_the_multiplier() -> None:
     body = _one_item(measurementUnit="kg", unitMultiplier=0.5, name="Pechuga granel")
     listing = make_adapter(ok(body))[0].search("x")[0]
     assert (listing.sold_by, listing.size, listing.unit) == (SoldBy.WEIGHT, 0.5, Unit.KG)
+
+
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), -1, 0, True])
+def test_unit_multiplier_must_be_finite_and_positive(bad) -> None:
+    adapter, _ = make_adapter(ok(_one_item(measurementUnit="kg", unitMultiplier=bad)))
+    with pytest.raises(ResponseShapeError, match="Cencosud"):
+        adapter.search("x")
