@@ -118,7 +118,10 @@ def test_duplicate_mapping_keys_are_rejected(tmp_path: Path) -> None:
 
 def test_store_params_load_from_stores_yaml() -> None:
     config = load_config(CONFIG_DIR)
-    assert config.stores["acuenta"].params == {"client_id": "SUPER_BODEGA"}
+    assert config.stores["acuenta"].params == {
+        "client_id": "SUPER_BODEGA",
+        "unconditional_promo_types": "specialPrice",
+    }
     assert config.stores["unimarc"].params == {
         "channel": "UNIMARC",
         "source": "web",

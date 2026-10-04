@@ -1,12 +1,13 @@
 # Per-store settings. API keys are public web-app keys; if a store rejects one, the weekly
 # issue names the store and the ApiKeyRejected error so this file can be updated.
-# `comuna` and `location_verified` are pinned by the store-location task (docs/store-locations.md).
+# `comuna` and `location_verified` are pinned by the store-location task (docs/store-locations.md);
+# `pending-verification` means the chain is reachable but not yet pinned to a Santiago branch.
 jumbo:
   name: Jumbo
   enabled: true
   base_url: https://bff.jumbo.cl
   api_key: be-reg-groceries-jumbo-catalog-w54byfvkmju5
-  store_ref: jumboclj512
+  store_ref: jumboclj512   # jumbo.cl default seller; branch/comuna not identified yet
   comuna: pending-verification
   smoke_sku: "1626"
 santa_isabel:
@@ -14,27 +15,34 @@ santa_isabel:
   enabled: true
   base_url: https://bff.santaisabel.cl
   api_key: be-reg-groceries-sisa-catalog-wdhhq5a2fken
-  store_ref: pedrofontova
-  comuna: pending-verification
+  store_ref: pedrofontova  # Santa Isabel Av. Pedro Fontova Norte 7789
+  comuna: Huechuraba
+  location_verified: 2026-10-04
+  smoke_sku: "7665"
 tottus:
   name: Tottus
   enabled: true
   base_url: https://www.tottus.cl
-  comuna: pending-verification
+  comuna: pending-verification  # search API returned the same prices with and without politicalId
   smoke_sku: "110609848"
 acuenta:
   name: aCuenta
   enabled: true
   base_url: https://nextgentheadless.instaleap.io/api/v3
-  store_ref: "580"
+  store_ref: "580"         # Instaleap storeReference; branch/comuna not identified yet
   comuna: pending-verification
+  smoke_sku: "2411"
   params:
     client_id: SUPER_BODEGA
+    # Promotion types treated as unconditional (comma separated). Live 2026-10-04: `specialPrice`
+    # has a single condition with quantity 0 (no minimum); `nx$` requires 2+ units and is excluded.
+    unconditional_promo_types: specialPrice
 unimarc:
   name: Unimarc
   enabled: true
   base_url: https://bff-unimarc-ecommerce.unimarc.cl
-  comuna: pending-verification
+  comuna: pending-verification  # the search API exposes no store or sales-channel field
+  smoke_sku: "7732"
   params:
     channel: UNIMARC
     source: web
@@ -43,8 +51,9 @@ lider:
   name: Lider
   enabled: true
   base_url: https://super.lider.cl
-  store_ref: "0000000057"
-  comuna: pending-verification
+  store_ref: "0000000057"  # pageMetadata.location.storeId with the Santiago Centro cookie
+  comuna: Santiago
+  location_verified: 2026-10-04
   cookies:
     walmart.nearestLatLng: "-33.4521,-70.6536"
   smoke_sku: "00780142021013"
