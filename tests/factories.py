@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import UTC, date, datetime
 
+from supermercado.config import AppConfig, StoreConfig
 from supermercado.domain.models import (
     BasketItem,
     Category,
@@ -79,3 +80,36 @@ def make_obs(**overrides: object) -> PriceObservation:
     }
     data.update(overrides)
     return PriceObservation(**data)
+
+
+STORE_NAMES = {
+    "jumbo": "Jumbo",
+    "santa_isabel": "Santa Isabel",
+    "tottus": "Tottus",
+    "acuenta": "aCuenta",
+    "unimarc": "Unimarc",
+    "lider": "Lider",
+}
+
+
+def make_store_config(name: str, **overrides: object) -> StoreConfig:
+    data: dict[str, object] = {
+        "name": name,
+        "base_url": "https://example.invalid",
+        "comuna": "Santiago",
+    }
+    data.update(overrides)
+    return StoreConfig(**data)
+
+
+def make_config(
+    *,
+    items: list[BasketItem] | None = None,
+    stores: tuple[str, ...] = ("jumbo", "lider"),
+    matches: dict[str, dict[str, Match]] | None = None,
+) -> AppConfig:
+    return AppConfig(
+        basket=items or [make_item()],
+        stores={s: make_store_config(STORE_NAMES.get(s, s)) for s in stores},
+        matches=matches or {},
+    )

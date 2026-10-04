@@ -1,0 +1,9 @@
+# Approved SKU per (basket item, store). Changed only through reviewed pull requests.
+# Always quote SKUs: unquoted numbers lose leading zeros and are rejected.
+# `size` is the package size in the item's unit (see basket.yaml).
+# Lider entries also need `url` (Lider has no automated search).
+#
+# Example:
+# rice:
+#   jumbo: { sku: "1626", size: 1.0, approved: 2026-10-04 }
+#   lider: { sku: "00780142021013", url: "https://super.lider.cl/ip/arroz-y-legumbres/00780142021013", size: 1.0, approved: 2026-10-04 }

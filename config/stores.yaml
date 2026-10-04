@@ -1,0 +1,51 @@
+# Per-store settings. API keys are public web-app keys; if a store rejects one, the weekly
+# issue names the store and the ApiKeyRejected error so this file can be updated.
+# `comuna` and `location_verified` are pinned by the store-location task (docs/store-locations.md).
+jumbo:
+  name: Jumbo
+  enabled: false
+  base_url: https://bff.jumbo.cl
+  api_key: be-reg-groceries-jumbo-catalog-w54byfvkmju5
+  store_ref: jumboclj512
+  comuna: pending-verification
+  smoke_sku: "1626"
+santa_isabel:
+  name: Santa Isabel
+  enabled: false
+  base_url: https://bff.santaisabel.cl
+  api_key: be-reg-groceries-sisa-catalog-wdhhq5a2fken
+  store_ref: pedrofontova
+  comuna: pending-verification
+tottus:
+  name: Tottus
+  enabled: false
+  base_url: https://www.tottus.cl
+  comuna: pending-verification
+  smoke_sku: "110609848"
+acuenta:
+  name: aCuenta
+  enabled: false
+  base_url: https://nextgentheadless.instaleap.io/api/v3
+  store_ref: "580"
+  comuna: pending-verification
+  params:
+    client_id: SUPER_BODEGA
+unimarc:
+  name: Unimarc
+  enabled: false
+  base_url: https://bff-unimarc-ecommerce.unimarc.cl
+  comuna: pending-verification
+  params:
+    channel: UNIMARC
+    source: web
+    version: 1.0.0
+lider:
+  name: Lider
+  enabled: false
+  base_url: https://super.lider.cl
+  store_ref: "0000000057"
+  comuna: pending-verification
+  cookies:
+    walmart.nearestLatLng: "-33.4521,-70.6536"
+  smoke_sku: "00780142021013"
+  smoke_url: https://super.lider.cl/ip/arroz-y-legumbres/00780142021013

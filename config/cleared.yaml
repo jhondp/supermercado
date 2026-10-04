@@ -1,0 +1,3 @@
+# Suspicious or size-changed rows that a human reviewed and accepted.
+# They are ranked as ok from the next site build.
+# - { week: "2026-W40", store: jumbo, item_id: rice }

@@ -1,0 +1,204 @@
+# Basic basket: 23 items. Sizes are expressed in each item's normalization unit.
+# unit: kg | l | m | unit
+- id: rice
+  name: Arroz grado 2 (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "arroz grado 2"
+  rules:
+    size_range: [0.9, 1.0]
+    exclude: [integral, preparado, "con leche"]
+- id: spaghetti
+  name: Fideos spaghetti (400 g)
+  category: pantry
+  unit: kg
+  reference_qty: 0.4
+  search: "spaghetti 400 g"
+  rules:
+    size_range: [0.4, 0.5]
+    exclude: [integral, "sin gluten", "de arroz"]
+- id: vegetable_oil
+  name: Aceite vegetal (1 L)
+  category: pantry
+  unit: l
+  reference_qty: 1.0
+  search: "aceite vegetal 1 l"
+  rules:
+    size_range: [0.9, 1.0]
+    exclude: [oliva, spray, coco, sesamo]
+- id: sugar
+  name: Azúcar (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "azucar 1 kg"
+  rules:
+    size_range: [1.0, 1.0]
+    exclude: [flor, rubia, morena, endulzante, stevia]
+- id: flour
+  name: Harina sin polvos de hornear (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "harina sin polvos de hornear 1 kg"
+  rules:
+    size_range: [1.0, 1.0]
+    exclude: ["con polvos", integral, "sin gluten", pizza]
+- id: beans
+  name: Porotos secos (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "porotos 1 kg"
+  rules:
+    size_range: [0.9, 1.0]
+    exclude: [conserva, lata, precocidos, "listos"]
+- id: lentils
+  name: Lentejas (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "lentejas 1 kg"
+  rules:
+    size_range: [0.9, 1.0]
+    exclude: [conserva, lata, precocidas, "listas"]
+- id: salt
+  name: Sal fina (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "sal fina 1 kg"
+  rules:
+    size_range: [1.0, 1.0]
+    exclude: [parrillera, gruesa, "de mar", "baja en sodio", light]
+- id: tea
+  name: Té (100 bolsitas)
+  category: pantry
+  unit: unit
+  reference_qty: 100
+  search: "te 100 bolsitas"
+  rules:
+    size_range: [100, 100]
+    exclude: [hierbas, verde, rooibos, manzanilla, matcha]
+- id: instant_coffee
+  name: Café instantáneo (170 g)
+  category: pantry
+  unit: kg
+  reference_qty: 0.17
+  search: "cafe instantaneo 170 g"
+  rules:
+    size_range: [0.17, 0.17]
+    exclude: [grano, molido, capsulas, descafeinado, cappuccino]
+- id: whole_milk
+  name: Leche entera (1 L)
+  category: dairy_eggs
+  unit: l
+  reference_qty: 1.0
+  search: "leche entera 1 l"
+  rules:
+    size_range: [1.0, 1.0]
+    exclude: ["sin lactosa", polvo, descremada, semidescremada, chocolate, frutilla, vainilla]
+- id: eggs
+  name: Huevos (12 unidades)
+  category: dairy_eggs
+  unit: unit
+  reference_qty: 12
+  search: "huevos 12 unidades"
+  rules:
+    size_range: [12, 12]
+    exclude: [codorniz]
+- id: bread
+  name: Pan marraqueta o hallulla a granel (1 kg)
+  category: bakery
+  unit: kg
+  reference_qty: 1.0
+  search: "marraqueta"
+  rules:
+    exclude: [integral, congelada, envasada]
+- id: chicken_thigh
+  name: Trutro entero de pollo a granel (1 kg)
+  category: meat
+  unit: kg
+  reference_qty: 1.0
+  search: "trutro entero pollo"
+  rules:
+    exclude: [congelado, marinado, apanado, deshuesado, filete]
+- id: ground_beef
+  name: Carne molida 10% grasa (1 kg)
+  category: meat
+  unit: kg
+  reference_qty: 1.0
+  search: "carne molida 10% grasa"
+  rules:
+    exclude: [cerdo, pollo, pavo, soya, "4%", "5%", "7%", "15%", "20%"]
+- id: posta
+  name: Posta a granel (1 kg)
+  category: meat
+  unit: kg
+  reference_qty: 1.0
+  search: "posta granel"
+  rules:
+    exclude: [cerdo, pollo, congelada, molida]
+- id: laundry_detergent
+  name: Detergente líquido (3 L)
+  category: cleaning
+  unit: l
+  reference_qty: 3.0
+  search: "detergente liquido 3 l"
+  rules:
+    size_range: [2.7, 3.0]
+    exclude: [polvo, capsulas, suavizante]
+- id: dish_soap
+  name: Lavalozas (500 ml)
+  category: cleaning
+  unit: l
+  reference_qty: 0.5
+  search: "lavalozas 500 ml"
+  rules:
+    size_range: [0.5, 0.5]
+    exclude: [polvo, pastillas, capsulas, lavavajillas]
+- id: bleach
+  name: Cloro (1 L)
+  category: cleaning
+  unit: l
+  reference_qty: 1.0
+  search: "cloro 1 l"
+  rules:
+    size_range: [0.9, 1.0]
+    exclude: [gel, "ropa color", spray]
+- id: toilet_paper
+  name: Papel higiénico doble hoja (4 rollos)
+  category: cleaning
+  unit: m
+  reference_qty: 120
+  search: "papel higienico doble hoja 4 rollos"
+  rules:
+    exclude: ["hoja simple", "una hoja", toalla, servilleta, humedo]
+- id: deodorant
+  name: Desodorante en spray (150 ml)
+  category: hygiene
+  unit: l
+  reference_qty: 0.15
+  search: "desodorante spray 150 ml"
+  rules:
+    size_range: [0.15, 0.15]
+    exclude: [barra, "roll on", crema]
+- id: toothpaste
+  name: Pasta dental (90 g)
+  category: hygiene
+  unit: kg
+  reference_qty: 0.09
+  search: "pasta dental 90 g"
+  rules:
+    size_range: [0.09, 0.09]
+    exclude: [cepillo, enjuague, infantil, kids]
+- id: bar_soap
+  name: Jabón en barra (125 g)
+  category: hygiene
+  unit: kg
+  reference_qty: 0.125
+  search: "jabon de tocador barra"
+  rules:
+    size_range: [0.08, 0.5]
+    exclude: [liquido, ropa, repuesto]
