@@ -45,6 +45,23 @@ def test_fetch_gets_the_product_page_with_location_cookie() -> None:
     assert (call["method"], call["url"], call["cookies"]) == ("GET", URL, COOKIES)
 
 
+def test_fetch_sends_browser_navigation_headers() -> None:
+    # Akamai served its challenge to bare requests; full navigation headers got the page.
+    adapter, transport = make_adapter(fixture_response("lider", "product_page.html"))
+    adapter.fetch(["00780142021013"])
+    headers = transport.calls[0]["headers"]
+    assert headers["Sec-Fetch-Mode"] == "navigate"
+    assert headers["Sec-Fetch-Dest"] == "document"
+    assert headers["Upgrade-Insecure-Requests"] == "1"
+    assert headers["Accept"].startswith("text/html")
+
+
+def test_robot_or_human_challenge_raises_blocked() -> None:
+    adapter, _ = make_adapter(ok("<html><head><title>Robot or human?</title></head></html>"))
+    with pytest.raises(BlockedError, match="Lider"):
+        adapter.fetch(["00780142021013"])
+
+
 def test_adapter_sends_no_hand_rolled_user_agent() -> None:
     adapter, transport = make_adapter(fixture_response("lider", "product_page.html"))
     adapter.fetch(["00780142021013"])

@@ -26,7 +26,18 @@ log = logging.getLogger(__name__)
 SITE_URL = "https://super.lider.cl"
 BLOCKING_STATUSES = frozenset({403, 412})
 _NEXT_DATA_RE = re.compile(r'<script[^>]*id="?__NEXT_DATA__"?[^>]*>(.*?)</script>', re.S)
-_BLOCK_MARKERS = ("px-captcha", "/blocked", "_pxAppId", "Access Denied")
+# Akamai's challenge page ("Robot or human?") also embeds the PerimeterX markers.
+_BLOCK_MARKERS = ("px-captcha", "/blocked", "_pxAppId", "Access Denied", "Robot or human")
+# Bare GETs drew the challenge on 2026-10-04; full browser navigation headers got the page.
+_NAVIGATION_HEADERS = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "es-CL,es;q=0.9,en;q=0.8",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+}
 
 
 def _price(block: Any) -> int | None:
@@ -89,7 +100,7 @@ def parse_product_page(html: str) -> Listing:
     match = _NEXT_DATA_RE.search(html)
     if match is None:
         if any(marker in html for marker in _BLOCK_MARKERS):
-            raise BlockedError("Lider: anti-bot (PerimeterX) page instead of the product")
+            raise BlockedError("Lider: anti-bot challenge page instead of the product")
         raise ResponseShapeError("Lider: page has no __NEXT_DATA__ script")
     try:
         product = json.loads(match.group(1))["props"]["pageProps"]["initialData"]["data"]["product"]
@@ -120,10 +131,7 @@ class LiderAdapter:
             return self._client.request(
                 "GET",
                 url,
-                headers={
-                    "Accept": "text/html,application/xhtml+xml",
-                    "Accept-Language": "es-CL,es;q=0.9",
-                },
+                headers=dict(_NAVIGATION_HEADERS),
                 cookies=dict(self._config.cookies),
             )
         except HttpError as exc:
