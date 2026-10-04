@@ -20,7 +20,7 @@ SEARCH_QUERY = (
     "query Search($input: SearchProductsInput!) "
     "{ searchProducts(searchProductsInput: $input) { products { " + _FIELDS + " } } }"
 )
-# The input type name is unverified against the live API; see the task report.
+# Input type and `skus` key verified against the live API on 2026-10-04 (store 580).
 SKU_QUERY = (
     "query BySku($input: GetProductsBySKUInput!) "
     "{ getProductsBySKU(getProductsBySKUInput: $input) { " + _FIELDS + " } }"
@@ -54,9 +54,19 @@ def _promo(product: dict[str, Any], price: int | None, promo_types: frozenset[st
         return None
     for condition in conditions:
         amount = _clp(condition.get("price"))
-        if condition.get("quantity") == 1 and amount is not None and amount < price:
+        # Live (2026-10-04): "specialPrice" conditions carry quantity 0 (no minimum); "nx$"
+        # multi-buys carry the required quantity (2, 3, ...).
+        if _quantity(condition.get("quantity")) <= 1 and amount is not None and amount < price:
             return amount
     return None
+
+
+def _quantity(value: Any) -> int | float:
+    if value is None:
+        return 0
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(f"promotion quantity {value!r} is not a number")
+    return value
 
 
 def _size(product: dict[str, Any]) -> tuple[float, Unit] | None:

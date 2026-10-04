@@ -148,6 +148,19 @@ def test_conditional_promotions_never_become_promo_price(kind) -> None:
     )
 
 
+def test_special_price_without_quantity_threshold_is_unconditional() -> None:
+    # Live shape (2026-10-04): specialPrice conditions carry quantity 0, i.e. no minimum.
+    promotion = {
+        "type": "specialPrice",
+        "isActive": True,
+        "conditions": [{"price": 725, "quantity": 0}],
+    }
+    types = frozenset({"specialprice"})
+    assert (
+        parse_products(product(promotion=promotion), "searchProducts", types)[0].promo_price == 725
+    )
+
+
 def test_multi_quantity_and_inactive_promotions_are_ignored() -> None:
     multi = {"type": "DISCOUNT", "isActive": True, "conditions": [{"price": 500, "quantity": 3}]}
     inactive = {
