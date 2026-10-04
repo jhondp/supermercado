@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from supermercado.config import AppConfig, ConfigError, StoreConfig
+from supermercado.stores.acuenta import AcuentaAdapter
 from supermercado.stores.base import HttpClient, StoreAdapter, Transport, curl_transport
 from supermercado.stores.jumbo import JumboAdapter
 from supermercado.stores.santa_isabel import SantaIsabelAdapter
@@ -16,6 +17,7 @@ FACTORIES: dict[str, AdapterFactory] = {
     "jumbo": lambda client, store, app: JumboAdapter(client, store),
     "santa_isabel": lambda client, store, app: SantaIsabelAdapter(client, store),
     "tottus": lambda client, store, app: TottusAdapter(client, store),
+    "acuenta": lambda client, store, app: AcuentaAdapter(client, store),
 }
 
 

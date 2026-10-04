@@ -1,0 +1,20 @@
+{
+  "data": {
+    "searchProducts": {
+      "products": [
+        {"name": "Arroz Grado 2 Tucapel 1 Kg", "sku": "7801420210130", "brand": "Tucapel", "price": 1650,
+         "unit": "Un", "subUnit": "kg", "subQty": 1, "clickMultiplier": 1, "stock": 120, "isAvailable": true,
+         "promotion": null},
+        {"name": "Arroz Grado 2 Acuenta 1 Kg", "sku": "7800000000011", "brand": "Acuenta", "price": 1290,
+         "unit": "Un", "subUnit": null, "subQty": null, "clickMultiplier": 1, "stock": 40, "isAvailable": true,
+         "promotion": {"type": "DISCOUNT", "isActive": true, "conditions": [{"price": 1190, "quantity": 1}]}},
+        {"name": "Fideos Spaghetti 5 400 g", "sku": "7800000000028", "brand": "Carozzi", "price": 990,
+         "unit": "Un", "subUnit": "g", "subQty": 400, "clickMultiplier": 1, "stock": 0, "isAvailable": false,
+         "promotion": {"type": "MXN", "isActive": true, "conditions": [{"price": 1600, "quantity": 2}]}},
+        {"name": "Trutro Entero de Pollo", "sku": "2000000000017", "brand": null, "price": 2990,
+         "unit": "Kg", "subUnit": null, "subQty": null, "clickMultiplier": 0.5, "stock": 15, "isAvailable": true,
+         "promotion": null}
+      ]
+    }
+  }
+}

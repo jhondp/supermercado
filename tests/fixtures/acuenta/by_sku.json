@@ -1,0 +1,12 @@
+{
+  "data": {
+    "getProductsBySKU": [
+      {"name": "Arroz Grado 2 Tucapel 1 Kg", "sku": "7801420210130", "brand": "Tucapel", "price": 1650,
+       "unit": "Un", "subUnit": "kg", "subQty": 1, "clickMultiplier": 1, "stock": 120, "isAvailable": true,
+       "promotion": null},
+      {"name": "Azúcar Iansa 1 Kg", "sku": "7801111111111", "brand": "Iansa", "price": 1250,
+       "unit": "Un", "subUnit": "kg", "subQty": 1, "clickMultiplier": 1, "stock": 10, "isAvailable": true,
+       "promotion": null}
+    ]
+  }
+}

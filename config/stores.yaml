@@ -24,7 +24,7 @@ tottus:
   smoke_sku: "110609848"
 acuenta:
   name: aCuenta
-  enabled: false
+  enabled: true
   base_url: https://nextgentheadless.instaleap.io/api/v3
   store_ref: "580"
   comuna: pending-verification
