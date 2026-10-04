@@ -41,7 +41,7 @@ unimarc:
     version: 1.0.0
 lider:
   name: Lider
-  enabled: false
+  enabled: true
   base_url: https://super.lider.cl
   store_ref: "0000000057"
   comuna: pending-verification
