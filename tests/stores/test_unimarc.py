@@ -29,15 +29,33 @@ def search_fixture():
     return fixture_response("unimarc", "search.json")
 
 
-def entry(price, list_price, item_id="9000", **item):
-    return {
-        "availableProducts": [
-            {
-                "item": {"itemId": item_id, "nameComplete": "Arroz 1 kg", **item},
-                "price": {"price": price, "listPrice": list_price, "availableQuantity": 1},
-            }
-        ]
+def entry(price, list_price, item_id="9000", tag=None, **item):
+    product = {
+        "item": {"itemId": item_id, "nameComplete": "Arroz 1 kg", **item},
+        "price": {"price": price, "listPrice": list_price, "availableQuantity": 1},
     }
+    if tag is not None:
+        product["priceDetail"] = {"promotionalTag": {"campaignId": "C0", "text": tag}}
+    return {"availableProducts": [product]}
+
+
+def test_web_exclusive_offer_is_an_unconditional_promo() -> None:
+    # Live tag "Exclusivo .cl" marks a web price open to everyone, unlike "Club Unimarc".
+    listing = parse_search(entry("$3.690", "$4.590", tag="Exclusivo .cl"))[0]
+    assert (listing.price, listing.promo_price, listing.card_price) == (4590, 3690, None)
+
+
+@pytest.mark.parametrize("tag", ["Club Unimarc", "Oferta misteriosa", None])
+def test_other_lower_prices_stay_club_prices(tag) -> None:
+    listing = parse_search(entry("$1.000", "$1.350", tag=tag))[0]
+    assert (listing.price, listing.promo_price, listing.card_price) == (1350, None, 1000)
+
+
+def test_malformed_price_detail_raises_shape_error() -> None:
+    payload = entry("$1.000", "$1.350")
+    payload["availableProducts"][0]["priceDetail"] = {"promotionalTag": "oops"}
+    with pytest.raises(ResponseShapeError, match="Unimarc"):
+        parse_search(payload)
 
 
 def test_search_sends_required_headers_and_body() -> None:

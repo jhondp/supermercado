@@ -20,6 +20,10 @@ from supermercado.stores.base import (
 SEARCH_PATH = "/catalog/product/search"
 SITE_URL = "https://www.unimarc.cl"
 HEADER_PARAMS = ("channel", "source", "version")
+# Live (2026-10-04): a `price` below `listPrice` is tagged in priceDetail.promotionalTag.text.
+# "Club Unimarc" (loyalty) and Unipay payment prices are card prices; "Exclusivo .cl" is a web
+# price open to everyone. Unknown tags stay card prices (never ranked) until observed.
+_OPEN_OFFER_TAGS = frozenset({"exclusivo .cl"})
 
 
 def _amount(value: Any) -> int | None:
@@ -49,6 +53,19 @@ def _multiplier(value: Any) -> float:
     return multiplier
 
 
+def _promo_tag(detail: Any) -> str:
+    if detail is None:
+        return ""
+    if not isinstance(detail, dict):
+        raise TypeError("priceDetail is not an object")
+    tag = detail.get("promotionalTag")
+    if tag is None:
+        return ""
+    if not isinstance(tag, dict):
+        raise TypeError("promotionalTag is not an object")
+    return str(tag.get("text") or "").strip().lower()
+
+
 def _listing(entry: dict[str, Any]) -> Listing:
     item = entry.get("item") or {}
     price = entry.get("price") or {}
@@ -56,8 +73,11 @@ def _listing(entry: dict[str, Any]) -> Listing:
         raise TypeError("itemId is not a string")
     current = _amount(price.get("price"))
     listed = _amount(price.get("listPrice"))
-    # A price above listPrice is never trusted as regular; a lower one is club-only (conservative).
+    # A price above listPrice is never trusted as regular; a lower one is club-only unless its
+    # promotional tag says the offer is open to every web shopper.
     regular = listed or current
+    lower = current if current and listed and current < listed else None
+    open_offer = lower is not None and _promo_tag(entry.get("priceDetail")) in _OPEN_OFFER_TAGS
     weighted = str(item.get("measurementUnit") or "").lower() == "kg"
     multiplier = _multiplier(item.get("unitMultiplier"))
     name = str(item.get("nameComplete") or item.get("name") or "")
@@ -76,7 +96,8 @@ def _listing(entry: dict[str, Any]) -> Listing:
         sold_by=SoldBy.WEIGHT if weighted else SoldBy.UNIT,
         multiplier=multiplier,
         price=regular,
-        card_price=current if current and listed and current < listed else None,
+        promo_price=lower if open_offer else None,
+        card_price=None if open_offer else lower,
         store_unit_price=_unit_price(price.get("ppum")),
         available=float(price.get("availableQuantity") or 0) > 0,
     )
