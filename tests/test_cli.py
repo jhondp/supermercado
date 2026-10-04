@@ -80,3 +80,13 @@ def test_config_error_exits_with_code_2(tmp_path: Path, monkeypatch: pytest.Monk
 
     monkeypatch.setattr(cli, "load_config", broken)
     assert run(tmp_path, "collect") == 2
+
+
+def test_build_command_renders_site(tmp_path: Path) -> None:
+    config_dir = Path(__file__).resolve().parents[1] / "config"
+    out = tmp_path / "dist"
+    code = cli.main(
+        ["--config", str(config_dir), "--data", str(tmp_path / "data"), "build", "--out", str(out)]
+    )
+    assert code == 0
+    assert (out / "index.html").exists()

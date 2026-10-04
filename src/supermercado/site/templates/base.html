@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Canasta Santiago · ¿Dónde sale más barata?{% endblock %}</title>
+  <meta name="description" content="Comparación semanal del precio de la canasta básica en supermercados de Santiago.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ root }}static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ root }}"><span class="brand-dot"></span>canasta</a>
+    <nav class="pill-nav" aria-label="Secciones">
+      <a class="pill {{ 'is-active' if page == 'home' }}" href="{{ root }}">Ranking</a>
+      <a class="pill {{ 'is-active' if page in ('products', 'product') }}" href="{{ root }}productos/">Productos</a>
+      <a class="pill {{ 'is-active' if page == 'methodology' }}" href="{{ root }}metodologia/">Metodología</a>
+    </nav>
+  </header>
+  <main class="container">
+{% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    Precios de referencia Santiago · Datos públicos de cada supermercado · Sin cookies de seguimiento
+  </footer>
+{% block scripts %}{% endblock %}
+  <script src="{{ root }}static/app.js" defer></script>
+</body>
+</html>

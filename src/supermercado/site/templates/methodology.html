@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Metodología · Canasta Santiago{% endblock %}
+{% block content %}
+<section class="hero hero--compact">
+  <p class="eyebrow">Cómo trabajamos</p>
+  <h1>Metodología</h1>
+</section>
+<article class="prose">
+  <h2>Productos equivalentes</h2>
+  <p>Cada producto de la canasta tiene una regla de equivalencia: tipo de producto, tamaño aceptado y términos excluidos. El sistema propone candidatos y una persona aprueba cada coincidencia antes de que entre al historial. No comparamos marcas exactas: comparamos el producto equivalente aprobado en cada supermercado.</p>
+
+  <h2>Ubicación de referencia</h2>
+  <p>Los precios corresponden a una sucursal o zona de despacho fija de Santiago por cadena:</p>
+  <ul class="plain-list">
+    {% for store in stores %}
+    <li>{{ store_names[store] }}: {{ comunas[store] }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Frecuencia</h2>
+  <p>Los precios se recolectan una vez por semana, los lunes en la mañana (hora de Santiago).</p>
+
+  <h2>Precios con tarjeta o club</h2>
+  <p>Usamos el precio que cualquier persona paga: el precio normal o una oferta sin condiciones. Los precios exclusivos para tarjetas o clubes se registran aparte y nunca se usan en el ranking.</p>
+
+  <h2>Cobertura mínima</h2>
+  <p>Un supermercado entra al ranking solo si tiene precio disponible para al menos el 80 % de los productos de la canasta (19 de 23 productos). Los supermercados que no alcanzan ese umbral se informan como «cobertura insuficiente esta semana» y no se clasifican.</p>
+
+  <h2>Cómo se calcula el total</h2>
+  <p>Cada producto se normaliza a precio por kg, litro, metro o unidad y se multiplica por la cantidad de referencia de la canasta. Solo se suman los productos que todos los supermercados incluidos en el ranking tienen disponibles esa semana, para comparar siempre la misma canasta. Nunca estimamos precios faltantes.</p>
+
+  <h2>Qué significa cada estado</h2>
+  <ul class="plain-list">
+    <li><strong>Sin datos:</strong> no pudimos obtener precios de ese supermercado esta semana.</li>
+    <li><strong>Sin match:</strong> todavía no hay un producto equivalente aprobado en ese supermercado.</li>
+    <li><strong>Agotado:</strong> el producto aprobado no tenía stock al momento de la consulta.</li>
+    <li><strong>En revisión:</strong> el precio por unidad cambió más de 50 % o el tamaño del envase cambió; queda fuera del ranking hasta que una persona lo revise.</li>
+  </ul>
+</article>
+{% endblock %}

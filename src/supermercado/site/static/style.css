@@ -1,0 +1,131 @@
+:root {
+  --honeydew: #E5F4E3;
+  --sky: #5DA9E9;
+  --blue: #003F91;
+  --white: #FFFFFF;
+  --purple: #6D326D;
+  --ink: #0B1F3A;
+  --muted: #5B6B80;
+  --line: rgba(0, 63, 145, 0.14);
+  --radius-lg: 32px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--honeydew);
+  color: var(--ink);
+  font-family: "Poppins", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a { color: var(--blue); }
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px;
+  background: var(--blue);
+  color: var(--white);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+
+.brand-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--sky);
+}
+
+.pill-nav {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pill {
+  border: 0;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pill.is-active { background: var(--white); color: var(--blue); }
+.pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.pill-row .pill { background: var(--white); color: var(--blue); border: 1px solid var(--line); }
+.pill-row .pill.is-active { background: var(--blue); color: var(--white); }
+
+.container { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+
+.hero { padding: 16px 0 8px; }
+.hero h1 { font-size: clamp(28px, 6vw, 48px); line-height: 1.1; letter-spacing: -0.03em; margin: 8px 0; }
+.hero--compact h1 { font-size: clamp(24px, 5vw, 36px); }
+.eyebrow { margin: 0; color: var(--purple); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; }
+.meta { color: var(--muted); margin: 4px 0 16px; }
+.empty { background: var(--white); border-radius: var(--radius-md); padding: 20px; }
+
+.ranking { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+
+.rank-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "pos store total" "pos change change";
+  gap: 4px 12px;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+
+.rank-card.is-winner { background: var(--blue); color: var(--white); border-radius: var(--radius-lg); }
+.rank-pos { grid-area: pos; font-size: 28px; font-weight: 700; color: var(--sky); }
+.rank-store { grid-area: store; font-weight: 600; font-size: 18px; }
+.rank-total { grid-area: total; font-weight: 700; font-size: 20px; }
+.rank-change { grid-area: change; font-size: 14px; opacity: 0.8; }
+.badge { justify-self: start; padding: 2px 10px; border-radius: var(--radius-pill); background: var(--sky); color: var(--white); font-size: 12px; font-weight: 600; }
+
+.no-data { margin-top: 32px; }
+.plain-list { padding-left: 18px; }
+
+.card { background: var(--white); border-radius: var(--radius-md); padding: 16px; }
+.chart-card { margin-bottom: 24px; }
+
+.table-scroll { overflow-x: auto; background: var(--white); border-radius: var(--radius-md); }
+.price-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.price-table th, .price-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.price-table thead th { color: var(--muted); font-weight: 500; }
+.price-table td.best { background: var(--sky); color: var(--white); font-weight: 600; }
+.price-table td.muted { color: var(--muted); }
+.price-table td.warn { color: var(--purple); font-style: italic; }
+
+.prose h2 { margin-top: 28px; }
+.site-footer { padding: 24px 16px; text-align: center; color: var(--muted); font-size: 13px; }
+
+@media (min-width: 720px) {
+  .site-header { padding: 24px 5vw; }
+  .rank-card { grid-template-columns: 48px 1fr auto auto; grid-template-areas: "pos store change total"; }
+}

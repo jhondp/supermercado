@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ item.name }} · Canasta Santiago{% endblock %}
+{% block content %}
+<section class="hero hero--compact">
+  <p class="eyebrow">{{ category_label }}</p>
+  <h1>{{ item.name }}</h1>
+  <p class="meta">Precio por {{ unit_label }} en el tiempo. Los triángulos marcan semanas en que cambió el producto (SKU).</p>
+</section>
+{% if chart.series %}
+<div class="card chart-card">
+  <canvas id="price-chart" role="img" aria-label="Evolución del precio por {{ unit_label }}"></canvas>
+</div>
+{% else %}
+<p class="empty">Todavía no hay precios registrados para este producto.</p>
+{% endif %}
+<h2>Producto usado en cada supermercado</h2>
+<div class="table-scroll">
+  <table class="price-table">
+    <thead>
+      <tr><th scope="col">Supermercado</th><th scope="col">SKU</th><th scope="col">Producto</th><th scope="col">Precio por {{ unit_label }}</th><th scope="col">Semana</th></tr>
+    </thead>
+    <tbody>
+      {% for row in latest %}
+      <tr>
+        <th scope="row">{{ store_names[row.store] }}</th>
+        <td>{{ row.sku }}</td>
+        <td>{% if row.url %}<a href="{{ row.url }}" rel="nofollow noopener">{{ row.product_name }}</a>{% else %}{{ row.product_name }}{% endif %}</td>
+        <td>{{ row.unit_price | clp }}</td>
+        <td>{{ row.week }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">Sin datos.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if sku_changes %}
+<h2>Cambios de producto</h2>
+<ul class="plain-list">
+  {% for change in sku_changes %}
+  <li>{{ store_names[change.store] }} · semana {{ change.week }}: SKU {{ change.previous }} → {{ change.sku }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<script type="application/json" id="chart-data">{{ chart_json | safe }}</script>
+{% endblock %}
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+{% endblock %}

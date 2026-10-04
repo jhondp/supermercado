@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Productos · Canasta Santiago{% endblock %}
+{% block content %}
+<section class="hero hero--compact">
+  <p class="eyebrow">Semana {{ week or "—" }}</p>
+  <h1>Precio por unidad en cada supermercado</h1>
+  <p class="meta">Precio normalizado por kg, litro, metro o unidad. El más barato aparece destacado.</p>
+</section>
+<div class="pill-row" role="group" aria-label="Filtrar por categoría">
+  <button type="button" class="pill is-active" data-filter="all">Todos</button>
+  {% for value, label in categories %}
+  <button type="button" class="pill" data-filter="{{ value }}">{{ label }}</button>
+  {% endfor %}
+</div>
+<div class="table-scroll">
+  <table class="price-table">
+    <thead>
+      <tr>
+        <th scope="col">Producto</th>
+        {% for store in stores %}<th scope="col">{{ store_names[store] }}</th>{% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr data-category="{{ row.category }}">
+        <th scope="row"><a href="{{ root }}producto/{{ row.item.id }}/">{{ row.item.name }}</a></th>
+        {% for cell in row.cells %}<td class="{{ cell.css }}">{{ cell.text }}</td>{% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

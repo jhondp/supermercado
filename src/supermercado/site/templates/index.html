@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Canasta básica · Semana {{ week or "—" }}</p>
+  <h1>¿Dónde sale más barata la canasta esta semana?</h1>
+  {% if updated %}
+  <p class="meta">Actualizado: {{ updated }} · Precios de referencia Santiago</p>
+  {% endif %}
+</section>
+{% if not week %}
+<p class="empty">Aún no hay datos. La primera actualización se publicará el próximo lunes.</p>
+{% elif not ranking.ranked and ranking.insufficient_coverage %}
+<p class="empty">Ningún supermercado alcanzó la cobertura mínima esta semana.</p>
+{% elif not ranking.ranked %}
+<p class="empty">Esta semana no hay productos comparables entre los supermercados con datos.</p>
+{% else %}
+<p class="meta">Comparando {{ ranking.comparable_items | length }} de {{ basket_size }} productos</p>
+<ol class="ranking">
+  {% for row in ranking.ranked %}
+  <li class="rank-card {{ 'is-winner' if loop.first }}">
+    <span class="rank-pos">{{ loop.index }}</span>
+    <span class="rank-store">{{ store_names[row.store] }}</span>
+    <span class="rank-total">{{ row.total | clp }}</span>
+    <span class="rank-change">{{ row.change | change }}</span>
+    {% if loop.first %}<span class="badge">Más barata</span>{% endif %}
+  </li>
+  {% endfor %}
+</ol>
+{% endif %}
+{% if week and ranking.insufficient_coverage %}
+<section class="no-data">
+  <h2>Cobertura insuficiente</h2>
+  <ul class="plain-list">
+    {% for store in ranking.insufficient_coverage %}
+    <li>{{ store_names[store] }}: cobertura insuficiente esta semana</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% if week and ranking.no_data %}
+<section class="no-data">
+  <h2>Supermercados sin datos</h2>
+  <ul class="plain-list">
+    {% for store in ranking.no_data %}
+    <li>{{ store_names[store] }}: sin datos esta semana</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

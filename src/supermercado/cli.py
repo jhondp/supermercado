@@ -14,6 +14,7 @@ from supermercado.config import ConfigError, load_config
 from supermercado.pipeline.collect import collect, iso_week
 from supermercado.pipeline.report import report_to_dict
 from supermercado.pipeline.storage import previous_unit_prices, write_week
+from supermercado.site.build import build_site
 from supermercado.stores import build_adapters
 
 
@@ -32,6 +33,8 @@ def _parser() -> argparse.ArgumentParser:
     )
     collect_cmd.add_argument("--store", help="collect a single store (manual fallback)")
     collect_cmd.add_argument("--report", type=Path, default=Path("build/report.json"))
+    build_cmd = sub.add_parser("build", help="render the static site into --out")
+    build_cmd.add_argument("--out", type=Path, default=Path("dist"))
     return parser
 
 
@@ -56,8 +59,15 @@ def _cmd_collect(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_build(args: argparse.Namespace) -> int:
+    build_site(load_config(args.config), args.data, args.out)
+    print(f"site written to {args.out}")
+    return 0
+
+
 COMMANDS: dict[str, Callable[[argparse.Namespace], int]] = {
     "collect": _cmd_collect,
+    "build": _cmd_build,
 }
 
 
