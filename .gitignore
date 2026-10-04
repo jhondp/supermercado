@@ -9,3 +9,4 @@ build/
 *.duckdb.wal
 .atl/
 .superpowers/
+config/*.bak
