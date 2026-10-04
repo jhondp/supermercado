@@ -85,3 +85,36 @@ def assert_recorded_listings(listings: list[Listing]) -> None:
     assert all(listing.sku and listing.name for listing in listings)
     priced = [listing for listing in listings if listing.price and listing.price > 0]
     assert len(priced) >= 0.9 * len(listings), "most recorded listings should carry a price"
+
+
+class FakeAdapter:
+    """In-memory StoreAdapter for pipeline tests."""
+
+    def __init__(
+        self,
+        store_id: str,
+        listings: list[Listing] | tuple[Listing, ...] = (),
+        *,
+        error: Exception | None = None,
+        supports_search: bool = True,
+        search_results: dict[str, list[Listing]] | None = None,
+    ) -> None:
+        self.store_id = store_id
+        self.supports_search = supports_search
+        self._listings = list(listings)
+        self._error = error
+        self._search_results = dict(search_results or {})
+        self.fetched: list[list[str]] = []
+        self.searched: list[str] = []
+
+    def fetch(self, skus: list[str]) -> list[Listing]:
+        self.fetched.append(list(skus))
+        if self._error is not None:
+            raise self._error
+        return [listing for listing in self._listings if listing.sku in skus]
+
+    def search(self, query: str) -> list[Listing]:
+        self.searched.append(query)
+        if self._error is not None:
+            raise self._error
+        return list(self._search_results.get(query, []))
