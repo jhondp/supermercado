@@ -30,6 +30,7 @@ addopts = "--import-mode=importlib"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+extend-exclude = ["docs", "template"]
 src = ["src", "tests"]
 
 [tool.ruff.lint]
