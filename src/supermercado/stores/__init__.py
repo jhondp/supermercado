@@ -7,11 +7,13 @@ from collections.abc import Callable
 from supermercado.config import AppConfig, ConfigError, StoreConfig
 from supermercado.stores.base import HttpClient, StoreAdapter, Transport, curl_transport
 from supermercado.stores.jumbo import JumboAdapter
+from supermercado.stores.santa_isabel import SantaIsabelAdapter
 
 AdapterFactory = Callable[[HttpClient, StoreConfig, AppConfig], StoreAdapter]
 
 FACTORIES: dict[str, AdapterFactory] = {
     "jumbo": lambda client, store, app: JumboAdapter(client, store),
+    "santa_isabel": lambda client, store, app: SantaIsabelAdapter(client, store),
 }
 
 

@@ -1,0 +1,43 @@
+{
+  "products": [
+    {
+      "productId": "21800",
+      "slug": "leche-entera-soprole-1-l",
+      "brand": "Soprole",
+      "items": [
+        {
+          "skuId": "21810",
+          "name": "Leche Entera Soprole 1 L",
+          "measurementUnit": "un",
+          "unitMultiplier": 1,
+          "price": 1090,
+          "listPrice": 1090,
+          "ppumPrice": 1090,
+          "ppumMeasurementUnit": "l",
+          "stock": true,
+          "promotions": []
+        }
+      ]
+    },
+    {
+      "productId": "33000",
+      "slug": "lavalozas-quix-limon-500-ml",
+      "brand": "Quix",
+      "items": [
+        {
+          "skuId": "33001",
+          "name": "Lavalozas Quix Limón 500 ml",
+          "measurementUnit": "un",
+          "unitMultiplier": 1,
+          "price": 1490,
+          "listPrice": 1890,
+          "ppumPrice": 2980,
+          "ppumMeasurementUnit": "l",
+          "stock": true,
+          "promotions": [{"name": "TCENCO OFERTA - 1290"}]
+        }
+      ]
+    }
+  ],
+  "results": 2
+}

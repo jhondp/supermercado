@@ -11,7 +11,7 @@ jumbo:
   smoke_sku: "1626"
 santa_isabel:
   name: Santa Isabel
-  enabled: false
+  enabled: true
   base_url: https://bff.santaisabel.cl
   api_key: be-reg-groceries-sisa-catalog-wdhhq5a2fken
   store_ref: pedrofontova
