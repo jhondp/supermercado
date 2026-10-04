@@ -161,6 +161,24 @@ def test_special_price_without_quantity_threshold_is_unconditional() -> None:
     )
 
 
+def test_promotion_without_quantity_is_conditional() -> None:
+    # Only an explicit quantity of 0 or 1 is evidence that the promotion has no minimum.
+    promotion = {"type": "DISCOUNT", "isActive": True, "conditions": [{"price": 500}]}
+    assert (
+        parse_products(product(promotion=promotion), "searchProducts", TYPES)[0].promo_price is None
+    )
+
+
+def test_non_numeric_promotion_quantity_raises_shape_error() -> None:
+    promotion = {
+        "type": "DISCOUNT",
+        "isActive": True,
+        "conditions": [{"price": 500, "quantity": "uno"}],
+    }
+    with pytest.raises(ResponseShapeError, match="aCuenta"):
+        parse_products(product(promotion=promotion), "searchProducts", TYPES)
+
+
 def test_multi_quantity_and_inactive_promotions_are_ignored() -> None:
     multi = {"type": "DISCOUNT", "isActive": True, "conditions": [{"price": 500, "quantity": 3}]}
     inactive = {

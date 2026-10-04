@@ -55,15 +55,17 @@ def _promo(product: dict[str, Any], price: int | None, promo_types: frozenset[st
     for condition in conditions:
         amount = _clp(condition.get("price"))
         # Live (2026-10-04): "specialPrice" conditions carry quantity 0 (no minimum); "nx$"
-        # multi-buys carry the required quantity (2, 3, ...).
-        if _quantity(condition.get("quantity")) <= 1 and amount is not None and amount < price:
+        # multi-buys carry the required quantity (2, 3, ...). A missing quantity is not evidence
+        # of "no minimum", so it stays conditional.
+        quantity = _quantity(condition.get("quantity"))
+        if quantity is not None and quantity <= 1 and amount is not None and amount < price:
             return amount
     return None
 
 
-def _quantity(value: Any) -> int | float:
+def _quantity(value: Any) -> int | float | None:
     if value is None:
-        return 0
+        return None
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TypeError(f"promotion quantity {value!r} is not a number")
     return value
