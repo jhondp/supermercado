@@ -82,11 +82,59 @@ def test_kg_products_are_sold_by_weight() -> None:
     )
 
 
-def test_fetch_searches_each_sku_and_keeps_exact_matches() -> None:
-    adapter, transport = make_adapter(search_fixture(), search_fixture())
-    listings = adapter.fetch(["110609848", "20001"])
+ALT_URL = "https://www.tottus.cl/tottus-cl/articulo/110609847/arroz-g-2-gran-selec-poli-1-kl-tucapel/110609848"
+ALT_RESPONSE = json.dumps({"data": {"altUrl": ALT_URL}, "responseType": "alt"})
+
+
+def test_fetch_sends_several_skus_as_one_space_separated_query() -> None:
+    # Live: "Ntt=<sku> <sku>" returns exactly those products; a lone SKU redirects instead.
+    adapter, transport = make_adapter(search_fixture())
+    listings = adapter.fetch(["110609848", "20001", "110609848"])
     assert [listing.sku for listing in listings] == ["110609848", "20001"]
-    assert [call["params"]["Ntt"] for call in transport.calls] == ["110609848", "20001"]
+    assert [call["params"]["Ntt"] for call in transport.calls] == ["110609848 20001"]
+
+
+def test_fetch_single_sku_follows_the_redirect_slug() -> None:
+    adapter, transport = make_adapter(ok(ALT_RESPONSE), search_fixture())
+    listings = adapter.fetch(["110609848"])
+    assert [listing.sku for listing in listings] == ["110609848"]
+    assert [call["params"]["Ntt"] for call in transport.calls] == [
+        "110609848",
+        "arroz g 2 gran selec poli 1 kl tucapel",
+    ]
+
+
+def test_redirect_without_a_usable_url_raises_shape_error() -> None:
+    adapter, _ = make_adapter(
+        ok('{"data": {"altUrl": "https://www.tottus.cl/"}, "responseType": "alt"}')
+    )
+    with pytest.raises(ResponseShapeError, match="Tottus"):
+        adapter.fetch(["110609848"])
+
+
+def test_search_never_follows_redirects() -> None:
+    adapter, transport = make_adapter(ok(ALT_RESPONSE))
+    with pytest.raises(ResponseShapeError, match="Tottus"):
+        adapter.search("110609848")
+    assert len(transport.calls) == 1
+
+
+def test_fetch_splits_large_batches() -> None:
+    adapter, transport = make_adapter(
+        ok('{"data": {"results": []}}'), ok('{"data": {"results": []}}')
+    )
+    skus = [str(n) for n in range(TottusAdapter.batch_size + 2)]
+    assert adapter.fetch(skus) == []
+    assert [call["params"]["Ntt"] for call in transport.calls] == [
+        " ".join(skus[: TottusAdapter.batch_size]),
+        " ".join(skus[TottusAdapter.batch_size :]),
+    ]
+
+
+def test_fetch_with_no_skus_makes_no_request() -> None:
+    adapter, transport = make_adapter()
+    assert adapter.fetch([]) == []
+    assert transport.calls == []
 
 
 def test_missing_results_raise_shape_error() -> None:
@@ -133,3 +181,13 @@ RECORDED = FIXTURES / "tottus" / "recorded_search.json"
 @pytest.mark.skipif(not RECORDED.exists(), reason="recorded fixture not captured yet")
 def test_recorded_search_parses() -> None:
     assert_recorded_listings(parse_search(json.loads(RECORDED.read_text(encoding="utf-8"))))
+
+
+RECORDED_FETCH = FIXTURES / "tottus" / "recorded_fetch.json"
+
+
+@pytest.mark.skipif(not RECORDED_FETCH.exists(), reason="recorded fixture not captured yet")
+def test_recorded_multi_sku_fetch_parses() -> None:
+    listings = parse_search(json.loads(RECORDED_FETCH.read_text(encoding="utf-8")))
+    assert_recorded_listings(listings)
+    assert {listing.sku for listing in listings} >= {"110609848", "110607035"}

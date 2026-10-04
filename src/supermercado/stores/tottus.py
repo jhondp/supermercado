@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from decimal import InvalidOperation
 from typing import Any
+from urllib.parse import urlsplit
 
 from supermercado.config import StoreConfig
 from supermercado.domain.models import Listing, SoldBy, Unit
 from supermercado.domain.units import parse_clp, parse_size
-from supermercado.stores.base import HttpClient, RawResponse, ResponseShapeError, fetch_by_search
+from supermercado.stores.base import HttpClient, RawResponse, ResponseShapeError
 
 SEARCH_PATH = "/s/browse/v1/search/cl"
 
@@ -58,7 +59,29 @@ def _listing(product: dict[str, Any]) -> Listing:
     )
 
 
+def is_redirect(payload: Any) -> bool:
+    """A query that is exactly one SKU or product id answers with the product URL, not results."""
+    return isinstance(payload, dict) and payload.get("responseType") == "alt"
+
+
+def redirect_query(payload: dict[str, Any]) -> str:
+    """Search words from the redirect URL slug (.../articulo/<productId>/<slug>/<sku>)."""
+    data = payload.get("data")
+    url = str(data.get("altUrl") or "") if isinstance(data, dict) else ""
+    segments = urlsplit(url).path.strip("/").split("/")
+    try:
+        slug = segments[segments.index("articulo") + 2]
+    except (ValueError, IndexError) as exc:
+        raise ResponseShapeError(f"Tottus: redirect without a product slug: {url!r}") from exc
+    words = slug.replace("-", " ").strip()
+    if not words:
+        raise ResponseShapeError(f"Tottus: redirect without a product slug: {url!r}")
+    return words
+
+
 def parse_search(payload: Any) -> list[Listing]:
+    if is_redirect(payload):
+        raise ResponseShapeError("Tottus search redirected to a product page (responseType alt)")
     try:
         results = payload["data"]["results"]
     except (KeyError, TypeError) as exc:
@@ -74,6 +97,7 @@ def parse_search(payload: Any) -> list[Listing]:
 class TottusAdapter:
     store_id = "tottus"
     supports_search = True
+    batch_size = 20  # live: "Ntt=<sku> <sku> ..." returns exactly those products (48 per page)
 
     def __init__(self, client: HttpClient, config: StoreConfig) -> None:
         self._client = client
@@ -97,4 +121,18 @@ class TottusAdapter:
         return parse_search(self.raw_search(query).json())
 
     def fetch(self, skus: list[str]) -> list[Listing]:
-        return fetch_by_search(skus, self.search)
+        wanted = list(dict.fromkeys(skus))
+        found: list[Listing] = []
+        for start in range(0, len(wanted), self.batch_size):
+            chunk = wanted[start : start + self.batch_size]
+            listings = self._results(" ".join(chunk))
+            found.extend(listing for listing in listings if listing.sku in chunk)
+        return found
+
+    def _results(self, query: str) -> list[Listing]:
+        payload = self.raw_search(query).json()
+        if is_redirect(payload):
+            # A lone SKU is answered with its product URL; the URL slug is the product name,
+            # and searching for it lists the product (exact-SKU filtering happens in fetch).
+            payload = self.raw_search(redirect_query(payload)).json()
+        return parse_search(payload)
