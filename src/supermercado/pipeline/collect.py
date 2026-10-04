@@ -14,6 +14,8 @@ from supermercado.stores.base import StoreAdapter
 
 log = logging.getLogger(__name__)
 
+EMPTY_RESULT_REASONS = 3
+
 
 class EmptyResult(Exception):
     """A store answered but returned no listing for any approved SKU."""
@@ -74,23 +76,31 @@ def collect(
             result.failures.append(StoreFailure(store_id, type(exc).__name__, str(exc), now))
             continue
         by_sku = {listing.sku: listing for listing in listings}
+        store_dropped: list[str] = []
+        store_observations = 0
         for item_id, match in matches.items():
             listing = by_sku.get(match.sku)
             if listing is None:
-                result.dropped.append(f"{store_id}/{item_id}: sku {match.sku} not returned")
+                store_dropped.append(f"{store_id}/{item_id}: sku {match.sku} not returned")
                 continue
             item = config.item(item_id)
-            observation = build_observation(
-                week=result.week,
-                scraped_at=now,
-                store=store_id,
-                item=item,
-                match=match,
-                listing=listing,
-                previous_unit_price=previous.get((store_id, item_id)),
-            )
+            try:
+                observation = build_observation(
+                    week=result.week,
+                    scraped_at=now,
+                    store=store_id,
+                    item=item,
+                    match=match,
+                    listing=listing,
+                    previous_unit_price=previous.get((store_id, item_id)),
+                )
+            except Exception as exc:  # one malformed listing must never abort the run
+                store_dropped.append(
+                    f"{store_id}/{item_id}: invalid listing ({type(exc).__name__}: {exc})"
+                )
+                continue
             if observation is None:
-                result.dropped.append(f"{store_id}/{item_id}: missing or non-positive price")
+                store_dropped.append(f"{store_id}/{item_id}: missing or non-positive price")
                 continue
             if observation.status is Status.SIZE_CHANGED:
                 result.alerts.append(
@@ -103,6 +113,14 @@ def collect(
                 )
             result.observations.append(observation)
             result.collected_stores.add(store_id)
+            store_observations += 1
+        result.dropped.extend(store_dropped)
+        if store_observations == 0:
+            # Soft blocks and price-less pages answer 200; without this they would be silent.
+            reasons = "; ".join(store_dropped[:EMPTY_RESULT_REASONS])
+            message = f"{len(listings)} listings returned but none usable: {reasons}"
+            log.warning("%s failed: EmptyResult: %s", store_id, message)
+            result.failures.append(StoreFailure(store_id, EmptyResult.__name__, message, now))
     for line in result.dropped:
         log.info("dropped %s", line)
     return result

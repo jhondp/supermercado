@@ -57,6 +57,17 @@ def test_collect_writes_snapshot_and_report(tmp_path: Path, wired) -> None:
     assert [(f["store"], f["error_class"]) for f in data["failures"]] == [("lider", "BlockedError")]
 
 
+def test_collect_survives_a_malformed_listing_and_writes_the_report(tmp_path: Path, wired) -> None:
+    wired["adapters"]["jumbo"] = FakeAdapter("jumbo", [make_listing(size=-1.0)])
+    wired["adapters"]["lider"] = FakeAdapter("lider", [make_listing(sku="007", price=1190)])
+    report = tmp_path / "r.json"
+    assert run(tmp_path, "collect", "--report", str(report)) == 0
+    assert [o.store for o in read_week(tmp_path / "data", "2026-W40")] == ["lider"]
+    data = json.loads(report.read_text(encoding="utf-8"))
+    assert any(d.startswith("jumbo/rice") for d in data["dropped"])
+    assert [(f["store"], f["error_class"]) for f in data["failures"]] == [("jumbo", "EmptyResult")]
+
+
 def test_collect_forwards_the_store_filter(tmp_path: Path, wired) -> None:
     assert run(tmp_path, "collect", "--store", "jumbo", "--report", str(tmp_path / "r.json")) == 0
     assert wired["only"] == "jumbo"

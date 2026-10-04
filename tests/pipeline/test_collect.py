@@ -1,5 +1,7 @@
 from datetime import UTC, datetime
 
+import pytest
+
 from factories import make_config, make_item, make_listing, make_match
 from fakes import FakeAdapter
 from supermercado.domain.models import Status, Unit
@@ -89,7 +91,48 @@ def test_store_whose_rows_were_all_dropped_is_not_collected() -> None:
     result = collect(config(), adapters, now=NOW, previous={})
     assert result.collected_stores == {"jumbo"}
     assert "lider/rice: missing or non-positive price" in result.dropped
+
+
+def test_store_with_listings_but_no_usable_row_is_an_empty_result_failure() -> None:
+    no_price = make_listing(sku="00780142021013", price=None)
+    adapters = {
+        "jumbo": FakeAdapter("jumbo", [make_listing(), MILK]),
+        "lider": FakeAdapter("lider", [no_price]),
+    }
+    result = collect(config(), adapters, now=NOW, previous={})
+    assert [(f.store, f.error_class, f.at) for f in result.failures] == [
+        ("lider", "EmptyResult", NOW)
+    ]
+    message = result.failures[0].message
+    assert message.startswith("1 listings returned but none usable: ")
+    assert "lider/rice: missing or non-positive price" in message
+
+
+def test_partially_dropped_store_is_not_a_failure() -> None:
+    adapters = {
+        "jumbo": FakeAdapter("jumbo", [make_listing()]),
+        "lider": FakeAdapter("lider", [LIDER_RICE]),
+    }
+    result = collect(config(), adapters, now=NOW, previous={})
     assert result.failures == []
+
+
+@pytest.mark.parametrize("bad_size", [-1.0, float("nan")])
+def test_malformed_listing_is_dropped_without_aborting_the_run(bad_size: float) -> None:
+    broken_milk = make_listing(sku="555", name="Leche", size=bad_size, unit=Unit.L, price=990)
+    adapters = {
+        "jumbo": FakeAdapter("jumbo", [make_listing(), broken_milk]),
+        "lider": FakeAdapter("lider", [LIDER_RICE]),
+    }
+    result = collect(config(), adapters, now=NOW, previous={})
+    assert sorted((o.store, o.item_id) for o in result.observations) == [
+        ("jumbo", "rice"),
+        ("lider", "rice"),
+    ]
+    assert result.collected_stores == {"jumbo", "lider"}
+    assert result.failures == []
+    [line] = [d for d in result.dropped if d.startswith("jumbo/milk")]
+    assert "invalid listing" in line
 
 
 def test_missing_sku_is_dropped_without_failing_the_store() -> None:
