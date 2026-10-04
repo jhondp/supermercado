@@ -184,6 +184,19 @@ def test_open_promotion_is_never_a_card_price() -> None:
     assert (listing.price, listing.promo_price, listing.card_price) == (1350, 1250, None)
 
 
+def test_multi_buy_card_promotion_is_not_a_card_price() -> None:
+    promo = {**LIVE_CARD_PROMO, "unitPrice": 1000, "mQuantity": 2}
+    adapter, _ = make_adapter(ok(_one_item(price=1350, listPrice=1350, promotions=[promo])))
+    assert adapter.search("x")[0].card_price is None
+
+
+def test_legacy_card_label_ending_in_the_amount_is_parsed() -> None:
+    # Older shape without unitPrice: the amount closes the label.
+    promo = {"name": "TCENCO OFERTA - $1.150"}
+    adapter, _ = make_adapter(ok(_one_item(price=1350, listPrice=1350, promotions=[promo])))
+    assert adapter.search("x")[0].card_price == 1150
+
+
 def test_card_promotion_unit_price_must_be_below_regular() -> None:
     promo = {**LIVE_CARD_PROMO, "unitPrice": 1350}
     adapter, _ = make_adapter(ok(_one_item(price=1350, listPrice=1350, promotions=[promo])))

@@ -46,7 +46,8 @@ def _card_price(promotions: list[dict[str, Any]], regular: int | None) -> int | 
     found = []
     for promo in promotions:
         label = str(promo.get("name") or promo.get("description") or "")
-        if not _is_card_promo(promo, label):
+        # Multi-buy card promos ("2 x ...") are not a per-unit card price.
+        if not _is_card_promo(promo, label) or promo.get("mQuantity") not in (None, 1):
             continue
         amount = _positive_int(promo.get("unitPrice"))
         if amount is None and (match := _CARD_PROMO_RE.search(label)):
