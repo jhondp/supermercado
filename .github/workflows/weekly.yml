@@ -1,0 +1,83 @@
+name: weekly
+
+on:
+  schedule:
+    # 06:00 America/Santiago during summer time (UTC-3); 05:00 local in winter (UTC-4).
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+# Least privilege by default; each job opts in to what it needs.
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the weekly Parquet snapshot
+      issues: write # open or update the failure issue
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+
+      # `collect` exits 0 even when every store fails; failures live in the report.
+      - name: Collect prices
+        run: uv run python -m supermercado collect --report build/report.json
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/prices
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(data): weekly price snapshot"
+            git push
+          fi
+
+      # Report text is untrusted (store error messages): it only travels through a file.
+      - name: Open or update the failure issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f build/report.json ] || exit 0
+          uv run python -m supermercado issue-body --report build/report.json > build/issue-body.md
+          [ -s build/issue-body.md ] || exit 0
+          gh label create weekly-collect --color B60205 --force
+          number="$(gh issue list --label weekly-collect --state open --json number --jq '.[0].number')"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file build/issue-body.md
+          else
+            gh issue create --title "Weekly collection problems" --label weekly-collect --body-file build/issue-body.md
+          fi
+
+      # Runs even if an earlier step failed so stores that succeeded still deploy.
+      - name: Build site
+        id: build
+        if: always()
+        run: uv run python -m supermercado build --out dist
+
+      - uses: actions/upload-pages-artifact@v3
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        with:
+          path: dist
+
+  deploy:
+    needs: collect
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

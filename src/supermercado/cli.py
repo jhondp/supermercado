@@ -12,7 +12,7 @@ from pathlib import Path
 
 from supermercado.config import ConfigError, load_config
 from supermercado.pipeline.collect import collect, iso_week
-from supermercado.pipeline.report import report_to_dict
+from supermercado.pipeline.report import render_issue_body, report_to_dict
 from supermercado.pipeline.storage import previous_unit_prices, write_week
 from supermercado.site.build import build_site
 from supermercado.stores import build_adapters
@@ -35,6 +35,8 @@ def _parser() -> argparse.ArgumentParser:
     collect_cmd.add_argument("--report", type=Path, default=Path("build/report.json"))
     build_cmd = sub.add_parser("build", help="render the static site into --out")
     build_cmd.add_argument("--out", type=Path, default=Path("dist"))
+    issue_cmd = sub.add_parser("issue-body", help="print the failure issue body for a report")
+    issue_cmd.add_argument("--report", type=Path, default=Path("build/report.json"))
     return parser
 
 
@@ -65,9 +67,16 @@ def _cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_issue_body(args: argparse.Namespace) -> int:
+    report = json.loads(args.report.read_text(encoding="utf-8"))
+    sys.stdout.write(render_issue_body(report))
+    return 0
+
+
 COMMANDS: dict[str, Callable[[argparse.Namespace], int]] = {
     "collect": _cmd_collect,
     "build": _cmd_build,
+    "issue-body": _cmd_issue_body,
 }
 
 

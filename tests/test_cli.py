@@ -90,3 +90,18 @@ def test_build_command_renders_site(tmp_path: Path) -> None:
     )
     assert code == 0
     assert (out / "index.html").exists()
+
+
+def test_issue_body_prints_markdown_only_when_there_are_problems(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    clean = tmp_path / "clean.json"
+    clean.write_text(json.dumps({"week": "2026-W40", "failures": [], "alerts": []}))
+    assert cli.main(["issue-body", "--report", str(clean)]) == 0
+    assert capsys.readouterr().out == ""
+
+    bad = tmp_path / "bad.json"
+    failure = {"store": "lider", "error_class": "BlockedError", "message": "x", "at": "t"}
+    bad.write_text(json.dumps({"week": "2026-W40", "failures": [failure], "alerts": []}))
+    assert cli.main(["issue-body", "--report", str(bad)]) == 0
+    assert "lider" in capsys.readouterr().out

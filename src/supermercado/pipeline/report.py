@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 from supermercado.pipeline.collect import CollectResult
@@ -26,3 +27,42 @@ def report_to_dict(result: CollectResult) -> dict[str, Any]:
         ],
         "dropped": list(result.dropped),
     }
+
+
+def _cell(text: object) -> str:
+    return str(text).replace("|", "\\|").replace("\n", " ")[:300]
+
+
+def render_issue_body(report: Mapping[str, Any]) -> str:
+    failures = report.get("failures") or []
+    alerts = report.get("alerts") or []
+    if not failures and not alerts:
+        return ""
+    lines = [f"## Weekly collection {report.get('week', '?')}", ""]
+    if failures:
+        lines += [
+            "### Store failures",
+            "",
+            "| Store | Error class | Time (UTC) | Message |",
+            "|---|---|---|---|",
+        ]
+        lines += [
+            f"| {f['store']} | `{f['error_class']}` | {f['at']} | {_cell(f['message'])} |"
+            for f in failures
+        ]
+        lines += [
+            "",
+            "Manual fallback from a residential IP: "
+            "`uv run python -m supermercado collect --store <id>`, then commit `data/prices/`.",
+            "",
+        ]
+    if alerts:
+        lines += [
+            "### Size changes (possible shrinkflation)",
+            "",
+            "| Store | Item | Detail |",
+            "|---|---|---|",
+        ]
+        lines += [f"| {a['store']} | {a['item_id']} | {_cell(a['message'])} |" for a in alerts]
+        lines += ["", "Confirm the product and update `size` in `config/matches.yaml`."]
+    return "\n".join(lines).rstrip() + "\n"
