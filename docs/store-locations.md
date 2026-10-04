@@ -8,7 +8,7 @@ Status on 2026-10-04 (headless verification from a residential connection, no br
 | Chain | `store_ref` | Comuna | How it was verified | Verified on |
 |---|---|---|---|---|
 | Jumbo | `jumboclj512` | pending-verification | `jumboclj512` is the seller the jumbo.cl home page uses before any address is chosen, and every `POST bff.jumbo.cl/catalog/plp` answer echoes it as the `storeId` filter in `metadata.searchEngineRequest`. No public endpoint maps the id to a branch (`bff.jumbo.cl/stores`, `/catalog/stores` and `www.jumbo.cl/api/stores` answer 404), so the comuna is unknown. | not yet |
-| Santa Isabel | `pedrofontova` | Huechuraba | `pedrofontova` is in the seller list embedded in the santaisabel.cl home page; it is the Santa Isabel branch at Av. Pedro Fontova Norte 7789, Huechuraba (Waze, Tiendeo and Uber Eats listings). `sku:7665` on `bff.santaisabel.cl/catalog/plp` with this store returns the product with a price. | 2026-10-04 |
+| Santa Isabel | `pedrofontova` | Huechuraba | `pedrofontova` is in the seller list embedded in the santaisabel.cl home page; the `pedrofontova` slug matches the branch at Av. Pedro Fontova Norte 7789, Huechuraba (third-party listings: Waze, Tiendeo, Uber Eats). No store-id lookup confirms it. `sku:7665` on `bff.santaisabel.cl/catalog/plp` with this store returns the product with a price. | 2026-10-04 |
 | Tottus | (empty) | pending-verification | `GET /s/browse/v1/search/cl?Ntt=arroz grado 2` with and without `politicalId=13` returned the same 48 products with identical prices, so the default answer looks chain-wide, but no zone id could be confirmed without the browser flow. Treat prices as Tottus online (default zone). | not yet |
 | aCuenta | `580` | pending-verification | `storeReference: "580"` is accepted by `searchProducts` and `getProductsBySKU` (clientId `SUPER_BODEGA`) and returns stock per store, but the API exposes no store catalogue (`getStores` is not in the schema), so the branch behind `580` is unknown. | not yet |
 | Unimarc | (none) | pending-verification | `POST /catalog/product/search` takes no store or sales-channel field and the answer carries none; prices may still depend on the address chosen in the browser. Follow-up: capture the browser request after choosing a Santiago address. | not yet |
@@ -24,6 +24,17 @@ Lider note: super.lider.cl sits behind Akamai Bot Manager. On 2026-10-04 a bare 
 "Robot or human?" challenge, a request with full browser navigation headers got the page, and
 after a dozen requests every request was challenged for a while. The adapter raises
 `BlockedError` on the challenge; expect intermittent Lider failures in the weekly issue.
+
+## Judgment calls
+
+Both rest on live observation on 2026-10-04 (Task 17 report), not yet on recorded fixtures that
+contain such promotions:
+
+- **aCuenta `specialPrice`** is treated as an unconditional promotion (its condition carries
+  quantity 0, aCuenta has no loyalty card, and the schema has no payment-method field). Disable it
+  by clearing `unconditional_promo_types` for aCuenta in `config/stores.yaml`.
+- **Unimarc "Exclusivo .cl"** is treated as an open web offer (`promo_price`); every other
+  promotional tag, including "Club Unimarc", stays `card_price` and is never ranked.
 
 ## How to verify
 
