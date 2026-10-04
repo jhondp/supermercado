@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
+import math
 import shutil
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import duckdb
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -63,19 +65,23 @@ def chart_data(
         points: list[dict[str, Any]] = []
         previous_sku: str | None = None
         for obs in sorted((o for o in rows if o.store == store), key=lambda o: o.week):
+            changed = previous_sku is not None and obs.sku != previous_sku
+            previous_sku = obs.sku
+            if obs.status != Status.OK or not obs.available:
+                continue
             points.append(
                 {
                     "week": obs.week,
                     "unit_price": obs.unit_price,
                     "sku": obs.sku,
-                    "sku_changed": previous_sku is not None and obs.sku != previous_sku,
+                    "sku_changed": changed,
                     "status": obs.status.value,
                 }
             )
-            previous_sku = obs.sku
         if points:
             series.append({"store": store, "label": names[store], "points": points})
-    return {"weeks": sorted({o.week for o in rows}), "series": series}
+    weeks = sorted({p["week"] for entry in series for p in entry["points"]})
+    return {"weeks": weeks, "series": series}
 
 
 def _sku_changes(chart: dict[str, Any]) -> list[dict[str, str]]:
@@ -95,14 +101,27 @@ def _sku_changes(chart: dict[str, Any]) -> list[dict[str, str]]:
     return changes
 
 
+def _safe_url(url: str | None) -> str | None:
+    return url if url and urlparse(url).scheme in ("http", "https") else None
+
+
 def _latest_rows(
     item_id: str, observations: Sequence[PriceObservation], stores: Sequence[str]
-) -> list[PriceObservation]:
+) -> list[dict[str, Any]]:
     latest: dict[str, PriceObservation] = {}
     for obs in sorted(observations, key=lambda o: o.week):
         if obs.item_id == item_id:
             latest[obs.store] = obs
-    return [latest[s] for s in stores if s in latest]
+    rows = []
+    for store in stores:
+        obs = latest.get(store)
+        if obs is None:
+            continue
+        label = (
+            "agotado" if not obs.available else "en revisión" if obs.status != Status.OK else None
+        )
+        rows.append({"obs": obs, "label": label, "url": _safe_url(obs.url)})
+    return rows
 
 
 def _cell(
@@ -173,6 +192,7 @@ def render_site(config: AppConfig, observations: Sequence[PriceObservation], out
         "stores": stores,
         "comunas": {store: config.stores[store].comuna for store in stores},
         "basket_size": len(config.basket),
+        "min_items": math.ceil(0.8 * len(config.basket)),
     }
     env = _environment()
     out_dir.mkdir(parents=True, exist_ok=True)

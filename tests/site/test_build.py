@@ -140,7 +140,7 @@ def test_home_says_no_store_reached_minimum_coverage(tmp_path: Path) -> None:
 def test_methodology_explains_the_coverage_rule(built: Path) -> None:
     html = read(built / "metodologia" / "index.html")
     assert "80 %" in html
-    assert "19 de 23" in html
+    assert "3 de 3 productos" in html
     assert "todos los supermercados con datos" not in html
 
 
@@ -177,3 +177,70 @@ def test_build_with_no_data_renders_empty_state(tmp_path: Path) -> None:
     build_site(config, tmp_path / "data", tmp_path / "dist")
     assert "Aún no hay datos" in read(tmp_path / "dist" / "index.html")
     assert len(list((tmp_path / "dist" / "producto").iterdir())) == 23
+
+
+def _rice_page(tmp_path: Path, extra, *, config=None) -> str:
+    rows = [
+        o for o in observations(lider_milk=True) if not (o.store == "lider" and o.item_id == "rice")
+    ]
+    dist = build(tmp_path, rows + extra, config)
+    return read(dist / "producto" / "rice" / "index.html")
+
+
+def _chart(html: str) -> dict:
+    match = re.search(r'<script type="application/json" id="chart-data">(.*?)</script>', html, re.S)
+    assert match is not None
+    return json.loads(match.group(1))
+
+
+def test_non_ok_and_unavailable_points_are_not_plotted_and_are_labelled(tmp_path: Path) -> None:
+    from supermercado.domain.models import Status
+
+    html = _rice_page(
+        tmp_path,
+        [
+            make_obs(**W39, store="lider", item_id="rice", sku="1", unit_price=1290),
+            make_obs(
+                store="lider", item_id="rice", sku="1", unit_price=9999, status=Status.SUSPICIOUS
+            ),
+        ],
+    )
+    chart = _chart(html)
+    lider = next(s for s in chart["series"] if s["store"] == "lider")
+    assert [p["week"] for p in lider["points"]] == ["2026-W39"]
+    assert "en revisión" in html
+    assert "$9.999" not in html
+
+
+def test_unavailable_item_is_labelled_agotado(tmp_path: Path) -> None:
+    html = _rice_page(
+        tmp_path,
+        [make_obs(store="lider", item_id="rice", sku="1", unit_price=5555, available=False)],
+    )
+    assert "agotado" in html
+    assert "$5.555" not in html
+    assert all(p["unit_price"] != 5555 for entry in _chart(html)["series"] for p in entry["points"])
+
+
+def test_non_http_product_url_is_not_linked(tmp_path: Path) -> None:
+    html = _rice_page(
+        tmp_path,
+        [make_obs(store="lider", item_id="rice", sku="1", url="javascript:alert(1)")],
+    )
+    assert "javascript:" not in html
+
+
+def test_product_name_is_escaped_and_chart_json_survives(tmp_path: Path) -> None:
+    evil = "</script><script>alert(1)</script>"
+    html = _rice_page(
+        tmp_path,
+        [make_obs(store="lider", item_id="rice", sku="1", product_name=evil)],
+    )
+    assert evil not in html
+    assert "&lt;/script&gt;" in html
+    assert _chart(html)["series"]
+
+
+def test_methodology_computes_threshold_from_real_basket(tmp_path: Path) -> None:
+    build_site(load_config(CONFIG_DIR), tmp_path / "data", tmp_path / "dist")
+    assert "19 de 23 productos" in read(tmp_path / "dist" / "metodologia" / "index.html")

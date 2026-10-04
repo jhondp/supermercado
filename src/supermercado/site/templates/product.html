@@ -22,11 +22,11 @@
     <tbody>
       {% for row in latest %}
       <tr>
-        <th scope="row">{{ store_names[row.store] }}</th>
-        <td>{{ row.sku }}</td>
-        <td>{% if row.url %}<a href="{{ row.url }}" rel="nofollow noopener">{{ row.product_name }}</a>{% else %}{{ row.product_name }}{% endif %}</td>
-        <td>{{ row.unit_price | clp }}</td>
-        <td>{{ row.week }}</td>
+        <th scope="row">{{ store_names[row.obs.store] }}</th>
+        <td>{{ row.obs.sku }}</td>
+        <td>{% if row.url %}<a href="{{ row.url }}" rel="nofollow noopener">{{ row.obs.product_name }}</a>{% else %}{{ row.obs.product_name }}{% endif %}</td>
+        <td>{{ row.label or (row.obs.unit_price | clp) }}</td>
+        <td>{{ row.obs.week }}</td>
       </tr>
       {% else %}
       <tr><td colspan="5">Sin datos.</td></tr>
