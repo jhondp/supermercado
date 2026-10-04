@@ -305,19 +305,28 @@ class App:
         chosen: list[NewMatch] = []
         replace: set[tuple[str, str]] = set()
         names = self.status().store_names
-        for index, (item, store) in enumerate(pairs, 1):
-            current = config.matches.get(item.id, {}).get(store)
-            self.say("", f"[{index}/{len(pairs)}] {item.name} · {names.get(store, store)}")
-            decision = self._review_pair(
-                item, store, section.candidates.get((item.id, store), []), current
-            )
-            if decision == _QUIT:
-                break
-            if isinstance(decision, NewMatch):
-                chosen.append(decision)
-                if current is not None:
-                    replace.add((item.id, store))
-        return self._save(chosen, replace)
+        interrupted = False
+        try:
+            for index, (item, store) in enumerate(pairs, 1):
+                current = config.matches.get(item.id, {}).get(store)
+                self.say("", f"[{index}/{len(pairs)}] {item.name} · {names.get(store, store)}")
+                decision = self._review_pair(
+                    item, store, section.candidates.get((item.id, store), []), current
+                )
+                if decision == _QUIT:
+                    break
+                if isinstance(decision, NewMatch):
+                    chosen.append(decision)
+                    if current is not None:
+                        replace.add((item.id, store))
+        except (KeyboardInterrupt, EOFError):
+            if not chosen:
+                raise  # nothing to keep: plain cancellation back to the menu
+            interrupted = True
+        saved = self._save(chosen, replace)
+        if interrupted and saved:
+            self.say(f"Interrumpido: se guardaron {len(chosen)} elecciones hechas hasta ahora.")
+        return saved
 
     def _review_pair(
         self, item: BasketItem, store: str, candidates: list[Candidate], current: Match | None
@@ -335,10 +344,10 @@ class App:
         if shown:
             self.say(
                 f"  Enter=sugerido · 1-{len(shown)}=elegir · s=saltar · m=SKU manual · "
-                "q=guardar y salir (Ctrl+C descarta)"
+                "q o Ctrl+C=guardar y salir"
             )
         else:
-            self.say("  m=SKU manual · Enter/s=saltar · q=guardar y salir (Ctrl+C descarta)")
+            self.say("  m=SKU manual · Enter/s=saltar · q o Ctrl+C=guardar y salir")
         while True:
             answer = self.ask("> ").lower()
             if answer == "q":

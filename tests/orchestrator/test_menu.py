@@ -326,3 +326,32 @@ def test_missing_report_is_explained(paths: Paths) -> None:
     app, out = make_app(paths, Script("8", "0"))
     app.run()
     assert "No hay reporte" in text(out)
+
+
+@pytest.mark.parametrize("stop", [KeyboardInterrupt(), EOFError()])
+def test_interrupting_approval_saves_the_choices_made_so_far(
+    paths: Paths, stop: BaseException
+) -> None:
+    # rice/jumbo -> suggested, then interrupt at rice/acuenta
+    app, out = make_app(paths, Script("2", "n", "", "n", "", stop, "0"))
+    assert app.run() == 0
+    assert load_config(paths.config).matches["rice"]["jumbo"].sku == "100"
+    shown = text(out)
+    assert "Interrumpido: se guardaron 1 elecciones" in shown
+    assert list(paths.config.glob("matches.yaml.*.bak"))
+
+
+def test_interrupting_a_manual_entry_keeps_earlier_choices(paths: Paths) -> None:
+    script = Script("2", "n", "1", "", "m", KeyboardInterrupt(), "0")
+    app, _ = make_app(paths, script)
+    app.run()
+    config = load_config(paths.config)
+    assert config.matches == {"rice": {"jumbo": config.matches["rice"]["jumbo"]}}
+
+
+def test_interrupting_before_any_choice_leaves_the_file_untouched(paths: Paths) -> None:
+    before = paths.matches.read_bytes()
+    app, out = make_app(paths, Script("2", "n", "", "n", KeyboardInterrupt(), "0"))
+    app.run()
+    assert paths.matches.read_bytes() == before
+    assert "Cancelado" in text(out)
