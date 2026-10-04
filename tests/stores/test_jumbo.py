@@ -138,3 +138,44 @@ def test_fractional_prices_round_half_up() -> None:
     )
     adapter, _ = make_adapter(ok(body))
     assert adapter.search("x")[0].price == 1001
+
+
+def _one_item(**fields) -> str:
+    item = {"skuId": "1", "name": "X 1 kg", "price": 1000, "listPrice": 1000}
+    item.update(fields)
+    return json.dumps({"products": [{"slug": "x", "items": [item]}]})
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        _one_item(price="abc"),
+        _one_item(unitMultiplier="x"),
+        _one_item(promotions=["oops"]),
+        json.dumps({"products": ["oops"]}),
+        json.dumps({"products": [{"items": ["oops"]}]}),
+    ],
+)
+def test_malformed_item_raises_shape_error(body) -> None:
+    adapter, _ = make_adapter(ok(body))
+    with pytest.raises(ResponseShapeError):
+        adapter.search("x")
+
+
+def test_card_price_must_be_below_the_regular_price() -> None:
+    body = _one_item(promotions=[{"name": "TCENCO OFERTA - 1500"}, {"name": "TARJETA 0 - 0"}])
+    adapter, _ = make_adapter(ok(body))
+    assert adapter.search("x")[0].card_price is None
+
+
+def test_card_label_without_amount_is_ignored() -> None:
+    adapter, _ = make_adapter(
+        ok(_one_item(promotions=[{"name": "TCENCO - ."}, {"name": "TCENCO - 900"}]))
+    )
+    assert adapter.search("x")[0].card_price == 900
+
+
+def test_weighted_size_comes_from_the_multiplier() -> None:
+    body = _one_item(measurementUnit="kg", unitMultiplier=0.5, name="Pechuga granel")
+    listing = make_adapter(ok(body))[0].search("x")[0]
+    assert (listing.sold_by, listing.size, listing.unit) == (SoldBy.WEIGHT, 0.5, Unit.KG)

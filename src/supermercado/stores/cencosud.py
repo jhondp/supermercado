@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any, ClassVar
 
 from supermercado.config import StoreConfig
@@ -19,7 +19,7 @@ from supermercado.stores.base import (
 )
 
 BATCH_SIZE = 40
-_CARD_PROMO_RE = re.compile(r"-\s*\$?\s*([\d.]+)\s*$")
+_CARD_PROMO_RE = re.compile(r"-\s*\$?\s*(\d[\d.]*)\s*$")
 _CARD_PROMO_MARKERS = ("TCENCO", "TARJETA")
 
 
@@ -30,14 +30,16 @@ def _positive_int(value: Any) -> int | None:
     return amount if amount > 0 else None
 
 
-def _card_price(promotions: list[dict[str, Any]]) -> int | None:
+def _card_price(promotions: list[dict[str, Any]], regular: int | None) -> int | None:
     found = []
     for promo in promotions:
         label = str(promo.get("name") or promo.get("description") or "")
         if not any(marker in label.upper() for marker in _CARD_PROMO_MARKERS):
             continue
         if match := _CARD_PROMO_RE.search(label):
-            found.append(int(match.group(1).replace(".", "")))
+            amount = int(match.group(1).replace(".", ""))
+            if regular is not None and 0 < amount < regular:
+                found.append(amount)
     return min(found) if found else None
 
 
@@ -64,7 +66,7 @@ def _listing(product: dict[str, Any], item: dict[str, Any], site_url: str) -> Li
         multiplier=multiplier,
         price=regular,
         promo_price=promo,
-        card_price=_card_price(item.get("promotions") or []),
+        card_price=_card_price(item.get("promotions") or [], regular),
         store_unit_price=_positive_int(item.get("ppumPrice")),
         available=bool(item.get("stock")),
     )
@@ -73,12 +75,17 @@ def _listing(product: dict[str, Any], item: dict[str, Any], site_url: str) -> Li
 def parse_plp(payload: Any, site_url: str) -> list[Listing]:
     if not isinstance(payload, dict) or not isinstance(payload.get("products"), list):
         raise ResponseShapeError("Cencosud PLP response has no 'products' list")
-    return [
-        _listing(product, item, site_url)
-        for product in payload["products"]
-        for item in (product.get("items") or [])
-        if item.get("skuId")
-    ]
+    listings: list[Listing] = []
+    try:
+        for product in payload["products"]:
+            for item in product.get("items") or []:
+                if item.get("skuId"):
+                    listings.append(_listing(product, item, site_url))
+    except (AttributeError, TypeError, ValueError, KeyError, InvalidOperation) as exc:
+        raise ResponseShapeError(
+            f"Cencosud PLP ({site_url}): malformed product data: {exc!r}"
+        ) from exc
+    return listings
 
 
 class CencosudAdapter:
