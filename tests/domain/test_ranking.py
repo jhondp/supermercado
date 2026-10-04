@@ -1,6 +1,8 @@
+import inspect
+
 from factories import make_item, make_obs
 from supermercado.domain.models import Status
-from supermercado.domain.ranking import basket_total, comparable_items, rank_stores
+from supermercado.domain.ranking import MIN_COVERAGE, basket_total, comparable_items, rank_stores
 
 RICE = make_item("rice")
 SPAGHETTI = make_item("spaghetti", reference_qty=0.4, name="Spaghetti 400 g")
@@ -108,3 +110,8 @@ def test_coverage_counts_only_ok_and_available_rows() -> None:
     ranking = rank_stores(current, [], BASKET, ["jumbo", "lider"])
     assert ranking.insufficient_coverage == ["lider"]
     assert [t.store for t in ranking.ranked] == ["jumbo"]
+
+
+def test_default_coverage_threshold_is_the_shared_constant() -> None:
+    assert MIN_COVERAGE == 0.8
+    assert inspect.signature(rank_stores).parameters["min_coverage"].default == MIN_COVERAGE

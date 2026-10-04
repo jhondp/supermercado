@@ -6,7 +6,7 @@ Interfaces:
   ``ceil(min_coverage * len(basket))`` ok+available basket items go to
   ``insufficient_coverage``. Only covered stores are ranked and used to compute
   ``comparable_items``, so a poorly covered store never shrinks the basket.
-- ``rank_stores(current, previous, basket, stores, min_coverage=0.8)``.
+- ``rank_stores(current, previous, basket, stores, min_coverage=MIN_COVERAGE)`` with MIN_COVERAGE = 0.8.
 """
 
 from __future__ import annotations
@@ -17,6 +17,9 @@ from dataclasses import dataclass, field
 from decimal import ROUND_HALF_UP, Decimal
 
 from supermercado.domain.models import BasketItem, PriceObservation, Status
+
+# Share of the basket a store must price (ok and available) to be ranked.
+MIN_COVERAGE = 0.8
 
 
 @dataclass(frozen=True)
@@ -67,7 +70,7 @@ def rank_stores(
     previous: Sequence[PriceObservation],
     basket: Sequence[BasketItem],
     stores: Sequence[str],
-    min_coverage: float = 0.8,
+    min_coverage: float = MIN_COVERAGE,
 ) -> Ranking:
     present = {o.store for o in current}
     no_data = [s for s in stores if s not in present]
