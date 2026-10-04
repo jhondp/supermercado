@@ -7,6 +7,8 @@ from typing import Any
 
 from supermercado.pipeline.collect import CollectResult
 
+MAX_DROPPED_ROWS = 50
+
 
 def report_to_dict(result: CollectResult) -> dict[str, Any]:
     return {
@@ -37,7 +39,8 @@ def _cell(text: object) -> str:
 def render_issue_body(report: Mapping[str, Any]) -> str:
     failures = report.get("failures") or []
     alerts = report.get("alerts") or []
-    if not failures and not alerts:
+    dropped = report.get("dropped") or []
+    if not failures and not alerts and not dropped:
         return ""
     lines = [f"## Weekly collection {report.get('week', '?')}", ""]
     if failures:
@@ -68,5 +71,10 @@ def render_issue_body(report: Mapping[str, Any]) -> str:
             f"| {_cell(a['store'])} | {_cell(a['item_id'])} | {_cell(a['message'])} |"
             for a in alerts
         ]
-        lines += ["", "Confirm the product and update `size` in `config/matches.yaml`."]
+        lines += ["", "Confirm the product and update `size` in `config/matches.yaml`.", ""]
+    if dropped:
+        lines += ["### Dropped rows", "", "| Row |", "|---|"]
+        lines += [f"| {_cell(row)} |" for row in dropped[:MAX_DROPPED_ROWS]]
+        if len(dropped) > MAX_DROPPED_ROWS:
+            lines += ["", f"... and {len(dropped) - MAX_DROPPED_ROWS} more (see the run report)."]
     return "\n".join(lines).rstrip() + "\n"

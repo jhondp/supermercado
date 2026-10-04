@@ -36,3 +36,22 @@ def test_cells_neutralize_mentions_backticks_and_line_breaks() -> None:
     assert "@octocat" not in body
     assert "@\u200boctocat 'x'" in body
     assert "\r" not in body
+
+
+def test_dropped_rows_are_listed_and_sanitized() -> None:
+    dropped = ["jumbo/milk: missing or non-positive price", "lider/rice: @octocat | `x`"]
+    body = render_issue_body({"week": "2026-W40", "failures": [], "alerts": [], "dropped": dropped})
+    assert "### Dropped rows" in body
+    assert "| jumbo/milk: missing or non-positive price |" in body
+    assert "@octocat" not in body
+    assert "lider/rice: @\u200boctocat \\| 'x'" in body
+
+
+def test_dropped_rows_are_truncated() -> None:
+    dropped = [f"jumbo/item{i}: sku {i} not returned" for i in range(100)]
+    body = render_issue_body(
+        {"week": "2026-W40", "failures": [FAILURE], "alerts": [], "dropped": dropped}
+    )
+    assert "jumbo/item0:" in body
+    assert "jumbo/item99:" not in body
+    assert "and 50 more" in body
