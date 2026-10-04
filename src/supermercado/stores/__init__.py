@@ -8,12 +8,14 @@ from supermercado.config import AppConfig, ConfigError, StoreConfig
 from supermercado.stores.base import HttpClient, StoreAdapter, Transport, curl_transport
 from supermercado.stores.jumbo import JumboAdapter
 from supermercado.stores.santa_isabel import SantaIsabelAdapter
+from supermercado.stores.tottus import TottusAdapter
 
 AdapterFactory = Callable[[HttpClient, StoreConfig, AppConfig], StoreAdapter]
 
 FACTORIES: dict[str, AdapterFactory] = {
     "jumbo": lambda client, store, app: JumboAdapter(client, store),
     "santa_isabel": lambda client, store, app: SantaIsabelAdapter(client, store),
+    "tottus": lambda client, store, app: TottusAdapter(client, store),
 }
 
 

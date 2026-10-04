@@ -1,0 +1,41 @@
+{
+  "data": {
+    "results": [
+      {
+        "productId": "110609847",
+        "skuId": "110609848",
+        "displayName": "Arroz Tucapel G2 Grano Largo Ancho 1 Kg",
+        "url": "https://www.tottus.cl/tottus-cl/articulo/110609847/arroz-g-2-gran-selec-poli-1-kl-tucapel",
+        "brand": "TUCAPEL",
+        "measurements": {"format": "1 KG", "unit": "UN"},
+        "prices": [
+          {"type": "internetPrice", "crossed": false, "price": ["1.890"],
+           "pum": {"label": "KG", "type": "pum", "price": ["1.890"]}}
+        ]
+      },
+      {
+        "productId": "110607000",
+        "skuId": "110607001",
+        "displayName": "Arroz American Thai Grano Largo G2 Bonanza 1 Kg",
+        "url": "https://www.tottus.cl/tottus-cl/articulo/110607000/arroz-bonanza-1-kg",
+        "brand": "BONANZA",
+        "measurements": {"format": "1 KG", "unit": "UN"},
+        "prices": [
+          {"type": "internetPrice", "crossed": false, "price": ["1.350"],
+           "pum": {"label": "KG", "type": "pum", "price": ["1.350"]}},
+          {"type": "normalPrice", "crossed": true, "price": ["1.590"]},
+          {"type": "cmrPrice", "crossed": false, "price": ["1.190"]}
+        ]
+      },
+      {
+        "productId": "20000",
+        "skuId": "20001",
+        "displayName": "Posta Negra Granel",
+        "url": "https://www.tottus.cl/tottus-cl/articulo/20000/posta-negra-granel",
+        "brand": "TOTTUS",
+        "measurements": {"format": "", "unit": "KG"},
+        "prices": [{"type": "internetPrice", "crossed": false, "price": ["9.990"]}]
+      }
+    ]
+  }
+}

@@ -18,7 +18,7 @@ santa_isabel:
   comuna: pending-verification
 tottus:
   name: Tottus
-  enabled: false
+  enabled: true
   base_url: https://www.tottus.cl
   comuna: pending-verification
   smoke_sku: "110609848"
