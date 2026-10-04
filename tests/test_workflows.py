@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import yaml
@@ -53,7 +54,7 @@ def test_actions_are_pinned_to_a_version() -> None:
     for job in load("weekly.yml")["jobs"].values():
         for step in job["steps"]:
             if "uses" in step:
-                assert "@v" in step["uses"]
+                assert re.search(r"@v\d+$", step["uses"])
 
 
 def test_issue_step_passes_body_as_file_and_still_runs_after_failures() -> None:
@@ -61,3 +62,31 @@ def test_issue_step_passes_body_as_file_and_still_runs_after_failures() -> None:
     issue = next(s for s in steps if "gh issue create" in s.get("run", ""))
     assert issue["if"] == "always()"
     assert "--body-file" in issue["run"]
+
+
+def test_deploy_runs_whenever_a_site_was_built() -> None:
+    workflow = load("weekly.yml")
+    collect = workflow["jobs"]["collect"]
+    assert collect["outputs"]["built"] == "${{ steps.build.outputs.built }}"
+    condition = workflow["jobs"]["deploy"]["if"]
+    assert "!cancelled()" in condition
+    assert "needs.collect.outputs.built == 'true'" in condition
+
+
+def test_issue_step_cannot_block_deploy_and_handles_missing_report() -> None:
+    steps = load("weekly.yml")["jobs"]["collect"]["steps"]
+    issue = next(s for s in steps if "gh issue create" in s.get("run", ""))
+    assert issue["continue-on-error"] is True
+    assert "GITHUB_RUN_ID" in issue["run"]
+    assert "weekly-collect" in issue["run"]
+
+
+def test_commit_step_tolerates_missing_data_and_rebases_before_push() -> None:
+    steps = load("weekly.yml")["jobs"]["collect"]["steps"]
+    commit = next(s for s in steps if "git add data/prices" in s.get("run", ""))["run"]
+    assert commit.index("[ -d data/prices ]") < commit.index("git add data/prices")
+    assert commit.index("git pull --rebase") < commit.index("git push")
+
+
+def test_concurrency_group_is_weekly() -> None:
+    assert load("weekly.yml")["concurrency"]["group"] == "weekly"

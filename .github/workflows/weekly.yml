@@ -17,6 +17,8 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    outputs:
+      built: ${{ steps.build.outputs.built }}
     permissions:
       contents: write # push the weekly Parquet snapshot
       issues: write # open or update the failure issue
@@ -35,20 +37,28 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          [ -d data/prices ] || exit 0
           git add data/prices
           if ! git diff --cached --quiet; then
             git commit -m "chore(data): weekly price snapshot"
+            git pull --rebase
             git push
           fi
 
       # Report text is untrusted (store error messages): it only travels through a file.
       - name: Open or update the failure issue
         if: always()
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          [ -f build/report.json ] || exit 0
-          uv run python -m supermercado issue-body --report build/report.json > build/issue-body.md
+          mkdir -p build
+          if [ -f build/report.json ]; then
+            uv run python -m supermercado issue-body --report build/report.json > build/issue-body.md
+          else
+            printf 'Weekly collect crashed before writing a report, see run %s/%s/actions/runs/%s\n' \
+              "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" > build/issue-body.md
+          fi
           [ -s build/issue-body.md ] || exit 0
           gh label create weekly-collect --color B60205 --force
           number="$(gh issue list --label weekly-collect --state open --json number --jq '.[0].number')"
@@ -62,7 +72,9 @@ jobs:
       - name: Build site
         id: build
         if: always()
-        run: uv run python -m supermercado build --out dist
+        run: |
+          uv run python -m supermercado build --out dist
+          echo "built=true" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-pages-artifact@v3
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -71,6 +83,7 @@ jobs:
 
   deploy:
     needs: collect
+    if: ${{ !cancelled() && needs.collect.outputs.built == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       pages: write

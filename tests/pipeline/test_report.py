@@ -28,3 +28,11 @@ def test_alerts_are_listed_as_size_changes() -> None:
     body = render_issue_body({"week": "2026-W40", "failures": [], "alerts": [ALERT]})
     assert "Size changes" in body
     assert "| jumbo | rice |" in body
+
+
+def test_cells_neutralize_mentions_backticks_and_line_breaks() -> None:
+    failure = {**FAILURE, "message": "@octocat `x`\r\nboom"}
+    body = render_issue_body({"week": "2026-W40", "failures": [failure], "alerts": []})
+    assert "@octocat" not in body
+    assert "@\u200boctocat 'x'" in body
+    assert "\r" not in body

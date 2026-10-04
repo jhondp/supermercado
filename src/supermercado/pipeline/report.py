@@ -30,7 +30,8 @@ def report_to_dict(result: CollectResult) -> dict[str, Any]:
 
 
 def _cell(text: object) -> str:
-    return str(text).replace("|", "\\|").replace("\n", " ")[:300]
+    cleaned = str(text).replace("\r", " ").replace("\n", " ").replace("`", "'")
+    return cleaned.replace("|", "\\|").replace("@", "@\u200b")[:300]
 
 
 def render_issue_body(report: Mapping[str, Any]) -> str:
@@ -47,7 +48,7 @@ def render_issue_body(report: Mapping[str, Any]) -> str:
             "|---|---|---|---|",
         ]
         lines += [
-            f"| {f['store']} | `{f['error_class']}` | {f['at']} | {_cell(f['message'])} |"
+            f"| {_cell(f['store'])} | `{_cell(f['error_class'])}` | {_cell(f['at'])} | {_cell(f['message'])} |"
             for f in failures
         ]
         lines += [
@@ -63,6 +64,9 @@ def render_issue_body(report: Mapping[str, Any]) -> str:
             "| Store | Item | Detail |",
             "|---|---|---|",
         ]
-        lines += [f"| {a['store']} | {a['item_id']} | {_cell(a['message'])} |" for a in alerts]
+        lines += [
+            f"| {_cell(a['store'])} | {_cell(a['item_id'])} | {_cell(a['message'])} |"
+            for a in alerts
+        ]
         lines += ["", "Confirm the product and update `size` in `config/matches.yaml`."]
     return "\n".join(lines).rstrip() + "\n"
