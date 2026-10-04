@@ -32,7 +32,7 @@ acuenta:
     client_id: SUPER_BODEGA
 unimarc:
   name: Unimarc
-  enabled: false
+  enabled: true
   base_url: https://bff-unimarc-ecommerce.unimarc.cl
   comuna: pending-verification
   params:

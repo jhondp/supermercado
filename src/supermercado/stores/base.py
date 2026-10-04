@@ -146,6 +146,14 @@ class HttpClient:
         self._last = self._clock()
 
 
+def fetch_by_search(skus: list[str], search: Callable[[str], list[Listing]]) -> list[Listing]:
+    """Fetch SKUs for stores without a by-SKU endpoint: one search per SKU, exact matches only."""
+    found: list[Listing] = []
+    for sku in dict.fromkeys(skus):
+        found.extend(listing for listing in search(sku) if listing.sku == sku)
+    return found
+
+
 class StoreAdapter(Protocol):
     store_id: str
     supports_search: bool

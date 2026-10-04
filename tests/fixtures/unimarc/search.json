@@ -1,0 +1,21 @@
+{
+  "availableProducts": [
+    {
+      "item": {"itemId": "5000", "nameComplete": "Arroz Grado 2 Tucapel 1 kg", "name": "Arroz Grado 2",
+               "brand": "Tucapel", "measurementUnit": "un", "unitMultiplier": 1,
+               "netContent": "1", "netContentLevelSmall": "kg",
+               "detailUrl": "/product/arroz-grado-2-tucapel-1-kg"},
+      "price": {"price": "$1.790", "listPrice": "$1.990", "ppum": "$1.790 x Kg", "availableQuantity": 50}
+    },
+    {
+      "item": {"itemId": "5001", "nameComplete": "Arroz Grado 2 Unimarc 1 kg", "name": "Arroz Grado 2",
+               "brand": "Unimarc", "measurementUnit": "un", "unitMultiplier": 1},
+      "price": {"price": "$1.390", "listPrice": "$1.390", "ppum": "$1.390 x Kg", "availableQuantity": 0}
+    },
+    {
+      "item": {"itemId": "5002", "nameComplete": "Posta Rosada Granel", "brand": "Unimarc",
+               "measurementUnit": "kg", "unitMultiplier": 1},
+      "price": {"price": 8990, "listPrice": 8990, "ppum": "$8.990 x Kg", "availableQuantity": 10}
+    }
+  ]
+}

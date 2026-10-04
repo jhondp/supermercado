@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from decimal import InvalidOperation
 from typing import Any
 
 from supermercado.config import StoreConfig
 from supermercado.domain.models import Listing, SoldBy, Unit
 from supermercado.domain.units import parse_clp, parse_size
-from supermercado.stores.base import HttpClient, RawResponse, ResponseShapeError
+from supermercado.stores.base import HttpClient, RawResponse, ResponseShapeError, fetch_by_search
 
 SEARCH_PATH = "/s/browse/v1/search/cl"
 
@@ -70,17 +69,6 @@ def parse_search(payload: Any) -> list[Listing]:
         return [_listing(product) for product in results if product.get("skuId")]
     except (AttributeError, TypeError, ValueError, KeyError, InvalidOperation) as exc:
         raise ResponseShapeError(f"Tottus search: malformed product data: {exc!r}") from exc
-
-
-def fetch_by_search(skus: list[str], search: Callable[[str], list[Listing]]) -> list[Listing]:
-    """Fetch SKUs for stores without a by-SKU endpoint: one search per SKU, exact matches only.
-
-    Candidate to move into stores/base.py when a second adapter needs it (PF12).
-    """
-    found: list[Listing] = []
-    for sku in dict.fromkeys(skus):
-        found.extend(listing for listing in search(sku) if listing.sku == sku)
-    return found
 
 
 class TottusAdapter:

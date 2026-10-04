@@ -10,6 +10,7 @@ from supermercado.stores.base import HttpClient, StoreAdapter, Transport, curl_t
 from supermercado.stores.jumbo import JumboAdapter
 from supermercado.stores.santa_isabel import SantaIsabelAdapter
 from supermercado.stores.tottus import TottusAdapter
+from supermercado.stores.unimarc import UnimarcAdapter
 
 AdapterFactory = Callable[[HttpClient, StoreConfig, AppConfig], StoreAdapter]
 
@@ -18,6 +19,7 @@ FACTORIES: dict[str, AdapterFactory] = {
     "santa_isabel": lambda client, store, app: SantaIsabelAdapter(client, store),
     "tottus": lambda client, store, app: TottusAdapter(client, store),
     "acuenta": lambda client, store, app: AcuentaAdapter(client, store),
+    "unimarc": lambda client, store, app: UnimarcAdapter(client, store),
 }
 
 
