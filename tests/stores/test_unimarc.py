@@ -46,7 +46,7 @@ def test_search_sends_required_headers_and_body() -> None:
     call = transport.calls[0]
     assert (call["method"], call["url"]) == ("POST", f"{API}/catalog/product/search")
     assert {k: call["headers"][k] for k in ("channel", "source", "version")} == PARAMS
-    assert "Chrome/" in call["headers"]["User-Agent"]
+    assert "User-Agent" not in call["headers"]  # curl_cffi chrome impersonation sets it
     assert call["json"] == {"from": "0", "to": "39", "searching": "arroz grado 2"}
 
 
@@ -98,6 +98,12 @@ def test_kg_items_are_sold_by_weight_and_accept_numeric_prices() -> None:
     )
 
 
+def test_fractional_multiplier_weighted_item() -> None:
+    listing = parse_search(entry(4500, 4500, measurementUnit="kg", unitMultiplier=0.5))[0]
+    assert (listing.size, listing.unit, listing.sold_by) == (0.5, Unit.KG, SoldBy.WEIGHT)
+    assert listing.multiplier == 0.5
+
+
 def test_float_prices_round_half_up() -> None:
     listing = parse_search(entry(1789.5, 1990.5))[0]
     assert (listing.price, listing.card_price) == (1991, 1790)
@@ -139,7 +145,7 @@ def test_fetch_keeps_exact_item_ids() -> None:
 
 
 def test_fetch_by_search_lives_in_base() -> None:
-    adapter, _ = make_adapter(search_fixture(), search_fixture())
+    adapter, transport = make_adapter(search_fixture(), search_fixture())
     assert [listing.sku for listing in fetch_by_search(["5000", "5000"], adapter.search)] == [
         "5000"
     ]

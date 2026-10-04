@@ -1,4 +1,4 @@
-"""Unimarc adapter: SMU BFF search (needs channel/source/version headers and a full Chrome UA)."""
+"""Unimarc adapter: SMU BFF search (needs channel/source/version headers)."""
 
 from __future__ import annotations
 
@@ -19,10 +19,6 @@ from supermercado.stores.base import (
 
 SEARCH_PATH = "/catalog/product/search"
 SITE_URL = "https://www.unimarc.cl"
-CHROME_USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-)
 HEADER_PARAMS = ("channel", "source", "version")
 
 
@@ -114,7 +110,7 @@ class UnimarcAdapter:
             raise AdapterError(
                 f"unimarc: params.{', params.'.join(missing)} required in config/stores.yaml"
             )
-        return {k: self._config.params[k] for k in HEADER_PARAMS}
+        return {k: str(self._config.params[k]) for k in HEADER_PARAMS}
 
     def raw_search(self, query: str) -> RawResponse:
         headers = self._api_headers()
@@ -123,7 +119,6 @@ class UnimarcAdapter:
             f"{self._config.base_url}{SEARCH_PATH}",
             headers={
                 **headers,
-                "User-Agent": CHROME_USER_AGENT,
                 "Content-Type": "application/json",
                 "Origin": SITE_URL,
                 "Referer": f"{SITE_URL}/",
