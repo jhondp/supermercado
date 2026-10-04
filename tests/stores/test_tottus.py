@@ -123,11 +123,13 @@ def test_fetch_splits_large_batches() -> None:
     adapter, transport = make_adapter(
         ok('{"data": {"results": []}}'), ok('{"data": {"results": []}}')
     )
-    skus = [str(n) for n in range(TottusAdapter.batch_size + 2)]
+    # Only 8 SKUs per query were verified live (2026-10-04).
+    assert TottusAdapter.batch_size == 8
+    skus = [str(n) for n in range(10)]
     assert adapter.fetch(skus) == []
     assert [call["params"]["Ntt"] for call in transport.calls] == [
-        " ".join(skus[: TottusAdapter.batch_size]),
-        " ".join(skus[TottusAdapter.batch_size :]),
+        " ".join(skus[:8]),
+        " ".join(skus[8:]),
     ]
 
 

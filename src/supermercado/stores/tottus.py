@@ -97,7 +97,7 @@ def parse_search(payload: Any) -> list[Listing]:
 class TottusAdapter:
     store_id = "tottus"
     supports_search = True
-    batch_size = 20  # live: "Ntt=<sku> <sku> ..." returns exactly those products (48 per page)
+    batch_size = 8  # live: "Ntt=<sku> <sku> ..." with 8 SKUs returned exactly those products
 
     def __init__(self, client: HttpClient, config: StoreConfig) -> None:
         self._client = client
