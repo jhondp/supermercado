@@ -105,3 +105,41 @@ def test_issue_body_prints_markdown_only_when_there_are_problems(
     bad.write_text(json.dumps({"week": "2026-W40", "failures": [failure], "alerts": []}))
     assert cli.main(["issue-body", "--report", str(bad)]) == 0
     assert "lider" in capsys.readouterr().out
+
+
+def test_propose_rewrites_only_the_proposal_section(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "matches.yaml").write_text("# approved\n", encoding="utf-8")
+    config = make_config(items=[make_item("rice")], stores=("jumbo",))
+    adapter = FakeAdapter("jumbo", search_results={"arroz grado 2": [make_listing()]})
+    monkeypatch.setattr(cli, "load_config", lambda _path: config)
+    monkeypatch.setattr(cli, "build_adapters", lambda _config, only=None: {"jumbo": adapter})
+    monkeypatch.setattr(cli, "_now", lambda: NOW)
+    assert cli.main(["--config", str(config_dir), "propose"]) == 0
+    text = (config_dir / "matches.yaml").read_text(encoding="utf-8")
+    assert text.startswith("# approved\n")
+    assert '#   jumbo: { sku: "1626", size: 1, approved: 2026-09-28 }' in text
+
+
+def test_propose_writes_a_pr_body_with_store_failures_and_lider_note(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "matches.yaml").write_text("# approved\n", encoding="utf-8")
+    config = make_config(items=[make_item("rice")], stores=("jumbo", "lider"))
+    adapters = {
+        "jumbo": FakeAdapter("jumbo", error=BlockedError("captcha")),
+        "lider": FakeAdapter("lider", supports_search=False),
+    }
+    monkeypatch.setattr(cli, "load_config", lambda _path: config)
+    monkeypatch.setattr(cli, "build_adapters", lambda _config, only=None: adapters)
+    monkeypatch.setattr(cli, "_now", lambda: NOW)
+    body = tmp_path / "body.md"
+    assert cli.main(["--config", str(config_dir), "propose", "--body", str(body)]) == 0
+    text = body.read_text(encoding="utf-8")
+    assert "jumbo" in text and "BlockedError" in text
+    assert "Lider" in text and "manual" in text

@@ -94,3 +94,29 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Independent of collect/build/deploy: a failure here never blocks publication.
+  propose:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: write # push the proposal branch
+      pull-requests: write # open or update the proposal PR
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+
+      # Store error messages are untrusted: they only reach the PR through a file.
+      - name: Search candidates for unmatched items
+        run: uv run python -m supermercado propose --body build/proposal-body.md
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/match-proposals
+          add-paths: config/matches.yaml
+          commit-message: "chore(matches): weekly match proposals"
+          title: "chore(matches): weekly match proposals"
+          body-path: build/proposal-body.md

@@ -90,3 +90,26 @@ def test_commit_step_tolerates_missing_data_and_rebases_before_push() -> None:
 
 def test_concurrency_group_is_weekly() -> None:
     assert load("weekly.yml")["concurrency"]["group"] == "weekly"
+
+
+def test_propose_job_never_blocks_publication() -> None:
+    job = load("weekly.yml")["jobs"]["propose"]
+    assert "needs" not in job
+    assert job["continue-on-error"] is True
+    assert "python -m supermercado propose" in runs(job)
+    assert any(
+        step.get("uses", "").startswith("peter-evans/create-pull-request") for step in job["steps"]
+    )
+
+
+def test_propose_job_has_its_own_least_privilege_and_body_from_file() -> None:
+    workflow = load("weekly.yml")
+    assert workflow["permissions"] == {"contents": "read"}
+    job = workflow["jobs"]["propose"]
+    assert job["permissions"] == {"contents": "write", "pull-requests": "write"}
+    pr = next(
+        s for s in job["steps"] if s.get("uses", "").startswith("peter-evans/create-pull-request")
+    )
+    assert pr["with"]["body-path"] == "build/proposal-body.md"
+    assert "body" not in pr["with"]
+    assert "${{" not in runs(job)

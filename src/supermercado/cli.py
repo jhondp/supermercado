@@ -12,6 +12,7 @@ from pathlib import Path
 
 from supermercado.config import ConfigError, load_config
 from supermercado.pipeline.collect import collect, iso_week
+from supermercado.pipeline.propose import propose, render_pr_body, render_proposals
 from supermercado.pipeline.report import render_issue_body, report_to_dict
 from supermercado.pipeline.storage import previous_unit_prices, write_week
 from supermercado.site.build import build_site
@@ -37,6 +38,9 @@ def _parser() -> argparse.ArgumentParser:
     build_cmd.add_argument("--out", type=Path, default=Path("dist"))
     issue_cmd = sub.add_parser("issue-body", help="print the failure issue body for a report")
     issue_cmd.add_argument("--report", type=Path, default=Path("build/report.json"))
+    propose_cmd = sub.add_parser("propose", help="write candidate matches into matches.yaml")
+    propose_cmd.add_argument("--store", help="propose for a single store")
+    propose_cmd.add_argument("--body", type=Path, help="also write the pull request body here")
     return parser
 
 
@@ -73,10 +77,37 @@ def _cmd_issue_body(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_propose(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    adapters = build_adapters(config, only=args.store)
+    now = _now()
+    proposals, failures = propose(config, adapters, now=now)
+    path = args.config / "matches.yaml"
+    path.write_text(
+        render_proposals(
+            path.read_text(encoding="utf-8"), proposals, week=iso_week(now), today=now.date()
+        ),
+        encoding="utf-8",
+    )
+    if args.body is not None:
+        manual = [
+            config.stores[name].name
+            for name, adapter in adapters.items()
+            if not adapter.supports_search
+        ]
+        args.body.parent.mkdir(parents=True, exist_ok=True)
+        args.body.write_text(render_pr_body(proposals, failures, manual), encoding="utf-8")
+    print(f"{len(proposals)} candidates written to {path}")
+    for failure in failures:
+        print(f"FAILED {failure.store}: {failure.error_class}: {failure.message}", file=sys.stderr)
+    return 0
+
+
 COMMANDS: dict[str, Callable[[argparse.Namespace], int]] = {
     "collect": _cmd_collect,
     "build": _cmd_build,
     "issue-body": _cmd_issue_body,
+    "propose": _cmd_propose,
 }
 
 
