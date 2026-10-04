@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#003F91}a:hover{color:#6D326D}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="font-family:'Poppins',sans-serif;color:#003F91;background:#FFFFFF;min-height:100vh;overflow-x:hidden">
+
+<!-- ===== 1a EDITORIAL ===== -->
+<sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}">
+<header style="display:flex;justify-content:space-between;align-items:center;padding:28px 5vw;border-bottom:1.5px solid #003F91">
+  <div style="font-weight:700;font-size:24px;letter-spacing:-0.04em">bolsillo<span style="color:#6D326D">.</span></div>
+  <nav style="display:flex;gap:32px;font-size:15px;font-weight:500">
+    <button onClick="{{ goBudget }}" style="background:none;border:0;padding:0;color:#003F91;cursor:pointer;font-size:15px;font-weight:500;text-decoration:{{ navB }};text-underline-offset:6px">Presupuesto</button>
+    <button onClick="{{ goPrices }}" style="background:none;border:0;padding:0;color:#003F91;cursor:pointer;font-size:15px;font-weight:500;text-decoration:{{ navP }};text-underline-offset:6px">Precios</button>
+  </nav>
+</header>
+
+<sc-if value="{{ isBudget }}" hint-placeholder-val="{{ true }}">
+<section style="padding:5vw 5vw 4vw;display:grid;gap:3vw">
+  <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.14em"><span>Nº 01 — Presupuesto personal</span><span>Edición 2026</span></div>
+  <h1 style="margin:0;font-size:clamp(60px,13vw,210px);font-weight:600;line-height:0.88;letter-spacing:-0.065em">
+    <span style="display:block">Cada peso</span>
+    <span style="display:flex;align-items:center;gap:2vw;padding-left:11vw">tiene <span style="display:inline-block;width:17vw;height:0.6em;background:#6D326D;border-radius:999px"></span></span>
+    <span style="display:block;text-align:right">su lugar.</span>
+  </h1>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px;align-items:end">
+    <p style="margin:0;font-size:20px;line-height:1.55;max-width:440px;text-wrap:pretty">Divide tu ingreso en tres partes claras y ve en segundos cuánto puedes gastar hoy sin tocar tu ahorro.</p>
+    <div style="justify-self:end"><button style="background:#003F91;color:#FFFFFF;border:0;padding:20px 36px;border-radius:999px;font-size:17px;font-weight:500;cursor:pointer" style-hover="background:#6D326D">Crear mi presupuesto →</button></div>
+  </div>
+</section>
+<div style="background:#003F91;color:#E5F4E3;overflow:hidden;padding:2.2vw 0;white-space:nowrap">
+  <div style="font-size:clamp(56px,10vw,160px);font-weight:700;letter-spacing:-0.05em;line-height:1;transform:translateX({{ shift }}px)">50 / 30 / 20 — necesidades, gustos, ahorro — 50 / 30 / 20 — necesidades, gustos, ahorro —</div>
+</div>
+<section style="padding:6vw 5vw">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:32px">
+    <div>
+      <div style="font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:8px">Tu ingreso mensual</div>
+      <div style="font-size:clamp(52px,8vw,128px);font-weight:600;letter-spacing:-0.06em;line-height:1">{{ incomeF }}</div>
+    </div>
+    <input type="range" min="5000" max="80000" step="500" value="{{ income }}" onChange="{{ setIncome }}" style="width:min(420px,100%);accent-color:#6D326D">
+  </div>
+  <div style="display:flex;min-height:280px;flex-wrap:wrap">
+    <div style="flex:5 1 200px;background:#E5F4E3;padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:24px"><span style="font-weight:500">50% · Necesidades</span><strong style="font-size:clamp(30px,4vw,60px);font-weight:600;letter-spacing:-0.04em">{{ needsF }}</strong></div>
+    <div style="flex:3 1 160px;background:#5DA9E9;padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:24px"><span style="font-weight:500">30% · Gustos</span><strong style="font-size:clamp(30px,4vw,60px);font-weight:600;letter-spacing:-0.04em">{{ wantsF }}</strong></div>
+    <div style="flex:2 1 140px;background:#6D326D;color:#FFFFFF;padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:24px"><span style="font-weight:500">20% · Ahorro</span><strong style="font-size:clamp(30px,4vw,60px);font-weight:600;letter-spacing:-0.04em">{{ saveF }}</strong></div>
+  </div>
+</section>
+<section style="padding:2vw 5vw 9vw">
+  <h2 style="margin:0 0 4vw;font-size:clamp(44px,7vw,112px);font-weight:600;letter-spacing:-0.06em;line-height:0.9">Características</h2>
+  <div style="display:grid;grid-template-columns:minmax(70px,1fr) minmax(0,3fr) minmax(0,3fr);gap:32px;padding:40px 0;border-top:1.5px solid #003F91;align-items:baseline"><span style="font-size:clamp(40px,6vw,88px);font-weight:300;color:#6D326D;line-height:1">01</span><h3 style="margin:0;font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Categorías automáticas</h3><p style="margin:0;font-size:18px;line-height:1.6">Cada gasto se acomoda solo en necesidades, gustos o ahorro. Tú solo corriges lo que haga falta.</p></div>
+  <div style="display:grid;grid-template-columns:minmax(70px,1fr) minmax(0,3fr) minmax(0,3fr);gap:32px;padding:40px 0;border-top:1.5px solid #003F91;align-items:baseline"><span style="font-size:clamp(40px,6vw,88px);font-weight:300;color:#6D326D;line-height:1">02</span><h3 style="margin:0;font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Metas que se ven</h3><p style="margin:0;font-size:18px;line-height:1.6">Ponle nombre y fecha a lo que quieres. El avance aparece cada vez que abres la app.</p></div>
+  <div style="display:grid;grid-template-columns:minmax(70px,1fr) minmax(0,3fr) minmax(0,3fr);gap:32px;padding:40px 0;border-top:1.5px solid #003F91;border-bottom:1.5px solid #003F91;align-items:baseline"><span style="font-size:clamp(40px,6vw,88px);font-weight:300;color:#6D326D;line-height:1">03</span><h3 style="margin:0;font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Avisos antes del gasto</h3><p style="margin:0;font-size:18px;line-height:1.6">Te avisamos cuando una categoría va al 80%, no cuando ya te pasaste.</p></div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isPrices }}" hint-placeholder-val="{{ false }}">
+<section style="padding:5vw 5vw 4vw;display:grid;gap:3vw">
+  <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.14em"><span>Nº 02 — Comparador de precios</span><span>Actualizado hoy</span></div>
+  <h1 style="margin:0;font-size:clamp(60px,13vw,210px);font-weight:600;line-height:0.88;letter-spacing:-0.065em">
+    <span style="display:block">El mismo</span>
+    <span style="display:flex;align-items:center;gap:2vw;justify-content:flex-end">carrito, <span style="display:inline-block;width:14vw;height:0.6em;background:#5DA9E9;border-radius:999px"></span></span>
+    <span style="display:block;padding-left:8vw">menos caro.</span>
+  </h1>
+  <p style="margin:0;font-size:20px;line-height:1.55;max-width:480px;text-wrap:pretty">Comparamos el precio de tus básicos en cuatro supermercados y te decimos dónde conviene comprar cada uno.</p>
+</section>
+<div style="background:#003F91;color:#E5F4E3;overflow:hidden;padding:2.2vw 0;white-space:nowrap">
+  <div style="font-size:clamp(56px,10vw,160px);font-weight:700;letter-spacing:-0.05em;line-height:1;transform:translateX({{ shift }}px)">leche · huevo · arroz · pan · manzana · leche · huevo · arroz · pan · manzana ·</div>
+</div>
+<section style="padding:6vw 5vw">
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px">
+    <sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
+      <button onClick="{{ p.pick }}" style="border:1.5px solid #003F91;background:{{ p.bg }};color:{{ p.ink }};padding:12px 22px;border-radius:999px;font-size:15px;font-weight:500;cursor:pointer">{{ p.name }}</button>
+    </sc-for>
+  </div>
+  <div style="display:grid;gap:14px">
+    <sc-for list="{{ stores }}" as="s" hint-placeholder-count="4">
+      <div style="display:grid;grid-template-columns:minmax(120px,220px) minmax(0,1fr);gap:20px;align-items:center">
+        <span style="font-size:18px;font-weight:500">{{ s.name }}</span>
+        <div style="background:#E5F4E3;height:72px">
+          <div style="height:100%;width:{{ s.w }};background:{{ s.bar }};color:{{ s.ink }};display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-sizing:border-box;transition:width .5s cubic-bezier(.2,.8,.2,1)"><span style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em">{{ s.tag }}</span><span style="font-size:26px;font-weight:600;letter-spacing:-0.03em">{{ s.price }}</span></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin:32px 0 0;font-size:18px">Comprando en <strong>{{ best }}</strong> ahorras <strong style="color:#6D326D">{{ diffF }}</strong> en este producto.</p>
+</section>
+<section style="padding:2vw 5vw 9vw">
+  <h2 style="margin:0 0 4vw;font-size:clamp(44px,7vw,112px);font-weight:600;letter-spacing:-0.06em;line-height:0.9">Características</h2>
+  <div style="display:grid;grid-template-columns:minmax(70px,1fr) minmax(0,3fr) minmax(0,3fr);gap:32px;padding:40px 0;border-top:1.5px solid #003F91;align-items:baseline"><span style="font-size:clamp(40px,6vw,88px);font-weight:300;color:#6D326D;line-height:1">01</span><h3 style="margin:0;font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Precios cada mañana</h3><p style="margin:0;font-size:18px;line-height:1.6">Revisamos los precios de cuatro tiendas todos los días antes de que salgas de casa.</p></div>
+  <div style="display:grid;grid-template-columns:minmax(70px,1fr) minmax(0,3fr) minmax(0,3fr);gap:32px;padding:40px 0;border-top:1.5px solid #003F91;align-items:baseline"><span style="font-size:clamp(40px,6vw,88px);font-weight:300;color:#6D326D;line-height:1">02</span><h3 style="margin:0;font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Tu lista, por tienda</h3><p style="margin:0;font-size:18px;line-height:1.6">Escribe tu lista una vez y la ordenamos según dónde sale más barato cada producto.</p></div>
+  <div style="display:grid;grid-template-columns:minmax(70px,1fr) minmax(0,3fr) minmax(0,3fr);gap:32px;padding:40px 0;border-top:1.5px solid #003F91;border-bottom:1.5px solid #003F91;align-items:baseline"><span style="font-size:clamp(40px,6vw,88px);font-weight:300;color:#6D326D;line-height:1">03</span><h3 style="margin:0;font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Historial de 90 días</h3><p style="margin:0;font-size:18px;line-height:1.6">Mira si una oferta es real comparándola con el precio de los últimos tres meses.</p></div>
+</section>
+</sc-if>
+</sc-if>
+
+<!-- ===== 1b BLOQUES ===== -->
+<sc-if value="{{ isB }}" hint-placeholder-val="{{ false }}">
+<header style="display:flex;justify-content:space-between;align-items:center;padding:20px 4vw;background:#003F91;color:#FFFFFF">
+  <div style="font-weight:800;font-size:20px;letter-spacing:0.02em;text-transform:uppercase">Bolsillo</div>
+  <nav style="display:flex;gap:4px">
+    <button onClick="{{ goBudget }}" style="border:0;padding:10px 18px;background:{{ tabB }};color:{{ tabBInk }};font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer">Presupuesto</button>
+    <button onClick="{{ goPrices }}" style="border:0;padding:10px 18px;background:{{ tabP }};color:{{ tabPInk }};font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer">Precios</button>
+  </nav>
+</header>
+
+<sc-if value="{{ isBudget }}" hint-placeholder-val="{{ true }}">
+<section style="display:flex;flex-wrap:wrap;min-height:86vh">
+  <div style="flex:1.5 1 340px;padding:4vw;display:flex;flex-direction:column;justify-content:space-between;gap:40px;background:#FFFFFF">
+    <span style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em">Presupuesto personal</span>
+    <h1 style="margin:0;font-size:clamp(56px,7.5vw,128px);font-weight:700;line-height:0.9;letter-spacing:-0.06em">Tu mes,<br>en colores.</h1>
+    <div style="display:grid;gap:20px">
+      <p style="margin:0;font-size:18px;line-height:1.55;max-width:380px">Pasa el cursor por cada bloque. Así se reparte tu ingreso de este mes.</p>
+      <button style="justify-self:start;background:#6D326D;color:#FFFFFF;border:0;padding:18px 32px;font-size:16px;font-weight:600;cursor:pointer" style-hover="background:#003F91">Empezar gratis</button>
+    </div>
+  </div>
+  <div style="flex:1 1 160px;background:#E5F4E3;padding:3vw 2vw;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;transition:flex-grow .5s cubic-bezier(.2,.8,.2,1);cursor:default" style-hover="flex-grow:2">
+    <span style="font-size:clamp(56px,6vw,104px);font-weight:700;letter-spacing:-0.06em;line-height:1">50%</span><span style="font-weight:600">Necesidades</span><span style="font-size:22px;font-weight:500">{{ needsF }}</span>
+  </div>
+  <div style="flex:1 1 160px;background:#5DA9E9;padding:3vw 2vw;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;transition:flex-grow .5s cubic-bezier(.2,.8,.2,1);cursor:default" style-hover="flex-grow:2">
+    <span style="font-size:clamp(56px,6vw,104px);font-weight:700;letter-spacing:-0.06em;line-height:1">30%</span><span style="font-weight:600">Gustos</span><span style="font-size:22px;font-weight:500">{{ wantsF }}</span>
+  </div>
+  <div style="flex:1 1 160px;background:#6D326D;color:#FFFFFF;padding:3vw 2vw;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;transition:flex-grow .5s cubic-bezier(.2,.8,.2,1);cursor:default" style-hover="flex-grow:2">
+    <span style="font-size:clamp(56px,6vw,104px);font-weight:700;letter-spacing:-0.06em;line-height:1">20%</span><span style="font-weight:600">Ahorro</span><span style="font-size:22px;font-weight:500">{{ saveF }}</span>
+  </div>
+</section>
+<section style="background:#003F91;color:#FFFFFF;padding:3vw 4vw;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap">
+  <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap"><span style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em">Ingreso mensual</span><span style="font-size:clamp(44px,6vw,96px);font-weight:700;letter-spacing:-0.05em;line-height:1">{{ incomeF }}</span></div>
+  <input type="range" min="5000" max="80000" step="500" value="{{ income }}" onChange="{{ setIncome }}" style="width:min(460px,100%);accent-color:#5DA9E9">
+</section>
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+  <div style="background:#FFFFFF;padding:4vw;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;transition:background .3s,color .3s" style-hover="background:#003F91;color:#FFFFFF"><span style="font-size:15px;font-weight:600">A</span><div><h3 style="margin:0 0 12px;font-size:clamp(28px,3vw,44px);font-weight:700;letter-spacing:-0.04em;line-height:1">Categorías automáticas</h3><p style="margin:0;font-size:17px;line-height:1.6">Cada gasto se acomoda solo en necesidades, gustos o ahorro.</p></div></div>
+  <div style="background:#E5F4E3;padding:4vw;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;transition:background .3s,color .3s" style-hover="background:#003F91;color:#FFFFFF"><span style="font-size:15px;font-weight:600">B</span><div><h3 style="margin:0 0 12px;font-size:clamp(28px,3vw,44px);font-weight:700;letter-spacing:-0.04em;line-height:1">Metas que se ven</h3><p style="margin:0;font-size:17px;line-height:1.6">Ponle nombre y fecha a lo que quieres y mira el avance cada día.</p></div></div>
+  <div style="background:#5DA9E9;padding:4vw;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;transition:background .3s,color .3s" style-hover="background:#003F91;color:#FFFFFF"><span style="font-size:15px;font-weight:600">C</span><div><h3 style="margin:0 0 12px;font-size:clamp(28px,3vw,44px);font-weight:700;letter-spacing:-0.04em;line-height:1">Avisos antes del gasto</h3><p style="margin:0;font-size:17px;line-height:1.6">Te avisamos cuando una categoría llega al 80%.</p></div></div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isPrices }}" hint-placeholder-val="{{ false }}">
+<section style="display:flex;flex-wrap:wrap;min-height:86vh">
+  <div style="flex:1 1 360px;padding:4vw;display:flex;flex-direction:column;justify-content:space-between;gap:40px;background:#E5F4E3">
+    <span style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em">Comparador de precios</span>
+    <h1 style="margin:0;font-size:clamp(52px,6.5vw,112px);font-weight:700;line-height:0.92;letter-spacing:-0.06em">¿Dónde sale más barato?</h1>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
+        <button onClick="{{ p.pick }}" style="border:0;background:{{ p.bg }};color:{{ p.ink }};padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer">{{ p.name }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1.4 1 420px;display:flex;min-height:520px">
+    <sc-for list="{{ stores }}" as="s" hint-placeholder-count="4">
+      <div style="flex:1;position:relative;background:#FFFFFF;border-left:1.5px solid #E5F4E3;display:flex;flex-direction:column;justify-content:flex-end">
+        <span style="position:absolute;top:24px;left:16px;right:16px;font-size:14px;font-weight:600;line-height:1.3">{{ s.name }}</span>
+        <div style="height:{{ s.h }};background:{{ s.fill }};color:{{ s.ink }};padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;transition:height .6s cubic-bezier(.2,.8,.2,1)"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em">{{ s.tag }}</span><span style="font-size:clamp(22px,2.4vw,36px);font-weight:700;letter-spacing:-0.04em">{{ s.price }}</span></div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+<section style="background:#003F91;color:#FFFFFF;padding:3vw 4vw;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap">
+  <span style="font-size:clamp(24px,2.6vw,40px);font-weight:600;letter-spacing:-0.03em">Compra en {{ best }}</span>
+  <span style="font-size:clamp(44px,6vw,96px);font-weight:700;letter-spacing:-0.05em;line-height:1">−{{ diffF }}</span>
+</section>
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+  <div style="background:#FFFFFF;padding:4vw;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;transition:background .3s,color .3s" style-hover="background:#6D326D;color:#FFFFFF"><span style="font-size:15px;font-weight:600">A</span><div><h3 style="margin:0 0 12px;font-size:clamp(28px,3vw,44px);font-weight:700;letter-spacing:-0.04em;line-height:1">Precios cada mañana</h3><p style="margin:0;font-size:17px;line-height:1.6">Cuatro tiendas revisadas todos los días antes de que salgas.</p></div></div>
+  <div style="background:#5DA9E9;padding:4vw;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;transition:background .3s,color .3s" style-hover="background:#6D326D;color:#FFFFFF"><span style="font-size:15px;font-weight:600">B</span><div><h3 style="margin:0 0 12px;font-size:clamp(28px,3vw,44px);font-weight:700;letter-spacing:-0.04em;line-height:1">Tu lista, por tienda</h3><p style="margin:0;font-size:17px;line-height:1.6">Ordenamos tu lista según dónde sale más barato cada producto.</p></div></div>
+  <div style="background:#E5F4E3;padding:4vw;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;transition:background .3s,color .3s" style-hover="background:#6D326D;color:#FFFFFF"><span style="font-size:15px;font-weight:600">C</span><div><h3 style="margin:0 0 12px;font-size:clamp(28px,3vw,44px);font-weight:700;letter-spacing:-0.04em;line-height:1">Historial de 90 días</h3><p style="margin:0;font-size:17px;line-height:1.6">Comprueba si una oferta es real frente a los últimos tres meses.</p></div></div>
+</section>
+</sc-if>
+</sc-if>
+
+<!-- ===== 1c INMERSIVO ===== -->
+<sc-if value="{{ isC }}" hint-placeholder-val="{{ false }}">
+<div style="background:#003F91;color:#FFFFFF;padding-bottom:8vw">
+<header style="display:flex;justify-content:space-between;align-items:center;padding:28px 5vw">
+  <div style="font-weight:600;font-size:22px;letter-spacing:-0.03em;display:flex;align-items:center;gap:10px"><span style="width:14px;height:14px;border-radius:50%;background:#5DA9E9;display:inline-block"></span>bolsillo</div>
+  <nav style="display:flex;gap:6px;background:rgba(255,255,255,0.1);padding:6px;border-radius:999px">
+    <button onClick="{{ goBudget }}" style="border:0;padding:10px 20px;border-radius:999px;background:{{ pillB }};color:{{ pillBInk }};font-size:14px;font-weight:500;cursor:pointer">Presupuesto</button>
+    <button onClick="{{ goPrices }}" style="border:0;padding:10px 20px;border-radius:999px;background:{{ pillP }};color:{{ pillPInk }};font-size:14px;font-weight:500;cursor:pointer">Precios</button>
+  </nav>
+</header>
+
+<sc-if value="{{ isBudget }}" hint-placeholder-val="{{ true }}">
+<section style="padding:6vw 0 4vw;overflow:hidden">
+  <div style="padding:0 5vw 2vw;font-size:14px;font-weight:500;color:#5DA9E9;text-transform:uppercase;letter-spacing:0.16em">Presupuesto personal</div>
+  <div style="white-space:nowrap;font-size:clamp(72px,15vw,240px);font-weight:700;letter-spacing:-0.06em;line-height:0.95;transform:translateX({{ shift }}px)">gasta con calma · gasta con calma ·</div>
+  <div style="white-space:nowrap;font-size:clamp(72px,15vw,240px);font-weight:700;letter-spacing:-0.06em;line-height:0.95;color:transparent;-webkit-text-stroke:2px #E5F4E3;transform:translateX({{ shiftRev }}px)">ahorra sin pensar · ahorra sin pensar ·</div>
+  <div style="padding:4vw 5vw 0;display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
+    <p style="margin:0;font-size:20px;line-height:1.55;max-width:460px;color:#E5F4E3">Haz scroll y mueve tu ingreso. Bolsillo reparte cada peso antes de que lo gastes.</p>
+    <button style="background:#FFFFFF;color:#003F91;border:0;padding:20px 36px;border-radius:999px;font-size:17px;font-weight:600;cursor:pointer" style-hover="background:#E5F4E3">Descargar la app</button>
+  </div>
+</section>
+<section style="padding:0 5vw">
+  <div style="background:#E5F4E3;color:#003F91;border-radius:40px;padding:clamp(28px,4vw,64px);display:grid;gap:32px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div><div style="font-size:14px;font-weight:500;margin-bottom:6px">Ingreso mensual</div><div style="font-size:clamp(56px,9vw,144px);font-weight:700;letter-spacing:-0.06em;line-height:0.95">{{ incomeF }}</div></div>
+      <input type="range" min="5000" max="80000" step="500" value="{{ income }}" onChange="{{ setIncome }}" style="width:min(420px,100%);accent-color:#003F91">
+    </div>
+    <div style="display:flex;height:28px;border-radius:999px;overflow:hidden;gap:4px"><div style="flex:5;background:#003F91"></div><div style="flex:3;background:#5DA9E9"></div><div style="flex:2;background:#6D326D"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px">
+      <div><div style="display:flex;align-items:center;gap:8px;font-weight:500"><span style="width:10px;height:10px;border-radius:50%;background:#003F91"></span>Necesidades 50%</div><div style="font-size:clamp(28px,3vw,44px);font-weight:600;letter-spacing:-0.04em">{{ needsF }}</div></div>
+      <div><div style="display:flex;align-items:center;gap:8px;font-weight:500"><span style="width:10px;height:10px;border-radius:50%;background:#5DA9E9"></span>Gustos 30%</div><div style="font-size:clamp(28px,3vw,44px);font-weight:600;letter-spacing:-0.04em">{{ wantsF }}</div></div>
+      <div><div style="display:flex;align-items:center;gap:8px;font-weight:500"><span style="width:10px;height:10px;border-radius:50%;background:#6D326D"></span>Ahorro 20%</div><div style="font-size:clamp(28px,3vw,44px);font-weight:600;letter-spacing:-0.04em">{{ saveF }}</div></div>
+    </div>
+  </div>
+</section>
+<section style="padding:8vw 0 0">
+  <div style="padding:0 5vw 32px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap"><h2 style="margin:0;font-size:clamp(44px,6vw,96px);font-weight:700;letter-spacing:-0.06em;line-height:0.9">Características</h2><span style="font-size:15px;color:#5DA9E9">Desliza →</span></div>
+  <div style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 5vw 12px">
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#5DA9E9;color:#003F91;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">1</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Categorías automáticas</h3><p style="margin:0;font-size:16px;line-height:1.6">Cada gasto se acomoda solo en necesidades, gustos o ahorro.</p></div></div>
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#6D326D;color:#FFFFFF;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">2</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Metas que se ven</h3><p style="margin:0;font-size:16px;line-height:1.6">Ponle nombre y fecha a lo que quieres y mira el avance cada día.</p></div></div>
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#E5F4E3;color:#003F91;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">3</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Avisos antes del gasto</h3><p style="margin:0;font-size:16px;line-height:1.6">Te avisamos cuando una categoría llega al 80%, no cuando ya te pasaste.</p></div></div>
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#FFFFFF;color:#003F91;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">4</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Cierre de mes</h3><p style="margin:0;font-size:16px;line-height:1.6">Un resumen de una pantalla con lo que entró, salió y quedó.</p></div></div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isPrices }}" hint-placeholder-val="{{ false }}">
+<section style="padding:6vw 0 4vw;overflow:hidden">
+  <div style="padding:0 5vw 2vw;font-size:14px;font-weight:500;color:#5DA9E9;text-transform:uppercase;letter-spacing:0.16em">Comparador de precios</div>
+  <div style="white-space:nowrap;font-size:clamp(72px,15vw,240px);font-weight:700;letter-spacing:-0.06em;line-height:0.95;transform:translateX({{ shift }}px)">ahorra {{ basketDiffF }} · ahorra {{ basketDiffF }} ·</div>
+  <div style="white-space:nowrap;font-size:clamp(72px,15vw,240px);font-weight:700;letter-spacing:-0.06em;line-height:0.95;color:transparent;-webkit-text-stroke:2px #E5F4E3;transform:translateX({{ shiftRev }}px)">en tu canasta · en tu canasta ·</div>
+</section>
+<section style="padding:0 5vw;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:24px;align-items:start">
+  <div style="display:grid;gap:24px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
+        <button onClick="{{ p.pick }}" style="border:1.5px solid #5DA9E9;background:{{ p.bgC }};color:{{ p.inkC }};padding:10px 18px;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer">{{ p.name }}</button>
+      </sc-for>
+    </div>
+    <div style="display:grid">
+      <sc-for list="{{ stores }}" as="s" hint-placeholder-count="4">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-bottom:1px solid rgba(229,244,227,0.25)">
+          <span style="font-size:20px;font-weight:500">{{ s.name }}</span>
+          <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#E5F4E3">{{ s.tag }}</span><span style="font-size:clamp(28px,3vw,44px);font-weight:600;letter-spacing:-0.04em;color:{{ s.inkC }}">{{ s.price }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="background:#FFFFFF;color:#003F91;border-radius:32px;padding:36px;display:grid;gap:4px">
+    <div style="font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px">Canasta de 5 básicos</div>
+    <sc-for list="{{ totals }}" as="t" hint-placeholder-count="4">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:16px;background:{{ t.bg }};color:{{ t.ink }}"><span style="font-weight:500">{{ t.name }}</span><span style="font-size:22px;font-weight:600">{{ t.total }}</span></div>
+    </sc-for>
+    <div style="margin-top:16px;font-size:15px;line-height:1.5">La canasta completa cuesta menos en <strong>{{ basketBest }}</strong>.</div>
+  </div>
+</section>
+<section style="padding:8vw 0 0">
+  <div style="padding:0 5vw 32px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap"><h2 style="margin:0;font-size:clamp(44px,6vw,96px);font-weight:700;letter-spacing:-0.06em;line-height:0.9">Características</h2><span style="font-size:15px;color:#5DA9E9">Desliza →</span></div>
+  <div style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 5vw 12px">
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#E5F4E3;color:#003F91;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">1</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Precios cada mañana</h3><p style="margin:0;font-size:16px;line-height:1.6">Cuatro tiendas revisadas todos los días antes de que salgas.</p></div></div>
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#5DA9E9;color:#003F91;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">2</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Tu lista, por tienda</h3><p style="margin:0;font-size:16px;line-height:1.6">Ordenamos tu lista según dónde sale más barato cada producto.</p></div></div>
+    <div style="flex:0 0 min(380px,80vw);height:440px;scroll-snap-align:start;background:#6D326D;color:#FFFFFF;border-radius:32px;padding:36px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-size:96px;font-weight:700;letter-spacing:-0.06em;line-height:0.8">3</span><div><h3 style="margin:0 0 10px;font-size:32px;font-weight:600;letter-spacing:-0.03em;line-height:1.05">Historial de 90 días</h3><p style="margin:0;font-size:16px;line-height:1.6">Comprueba si una oferta es real frente a los últimos tres meses.</p></div></div>
+  </div>
+</section>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- Switcher -->
+<div style="position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:4px;background:#FFFFFF;color:#003F91;padding:6px;border-radius:999px;box-shadow:0 10px 40px rgba(0,63,145,0.25);font-family:'Poppins',sans-serif">
+  <sc-for list="{{ dirs }}" as="d" hint-placeholder-count="3">
+    <button onClick="{{ d.pick }}" style="border:0;padding:9px 14px;border-radius:999px;background:{{ d.bg }};color:{{ d.ink }};font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ d.id }} {{ d.label }}</button>
+  </sc-for>
+  <span style="width:1px;height:22px;background:rgba(0,63,145,0.2);margin:0 4px"></span>
+  <button onClick="{{ goBudget }}" style="border:0;padding:9px 14px;border-radius:999px;background:{{ swB }};color:{{ swBInk }};font-size:13px;font-weight:500;cursor:pointer">Presupuesto</button>
+  <button onClick="{{ goPrices }}" style="border:0;padding:9px 14px;border-radius:999px;background:{{ swP }};color:{{ swPInk }};font-size:13px;font-weight:500;cursor:pointer">Precios</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const PRODUCTS=[{n:'Leche 1 L',p:[26.5,23.9,29.0,24.5]},{n:'Huevo 12 pzas',p:[48,52,44.5,49.9]},{n:'Arroz 1 kg',p:[32,28.5,35,30]},{n:'Pan de caja',p:[45,47.5,42,39.9]},{n:'Manzana 1 kg',p:[54,49,46.5,58]}];
+const STORES=['Mercado Central','SuperAhorro','Tienda Verde','MaxiMarket'];
+const money=n=>'$'+Math.round(n).toLocaleString('es-MX');
+const cents=n=>'$'+n.toFixed(2);
+class Component extends DCLogic {
+  state={dir:'a',page:'budget',income:25000,prod:0,y:0};
+  componentDidMount(){
+    this._on=()=>{if(this._r)return;this._r=requestAnimationFrame(()=>{this._r=0;this.setState({y:window.scrollY});});};
+    window.addEventListener('scroll',this._on,{passive:true});
+  }
+  componentWillUnmount(){window.removeEventListener('scroll',this._on);}
+  go(page){this.setState({page});window.scrollTo(0,0);}
+  renderVals(){
+    const {dir,page,income,prod,y}=this.state;
+    const cur=PRODUCTS[prod].p, max=Math.max(...cur), min=Math.min(...cur);
+    const stores=STORES.map((name,i)=>{const p=cur[i],m=p===min;return{name,price:cents(p),w:Math.round(p/max*100)+'%',h:Math.round(p/max*82)+'%',bar:m?'#6D326D':'#5DA9E9',fill:m?'#6D326D':'#003F91',ink:m?'#FFFFFF':(dir==='b'?'#FFFFFF':'#003F91'),inkC:m?'#5DA9E9':'#FFFFFF',tag:m?'Más barato':''};});
+    const tots=STORES.map((_,i)=>PRODUCTS.reduce((s,x)=>s+x.p[i],0));
+    const tMin=Math.min(...tots), tMax=Math.max(...tots);
+    const on=(a,bg,ink,offBg,offInk)=>a?{bg,ink}:{bg:offBg,ink:offInk};
+    const B=page==='budget';
+    const sb=on(B,'#003F91','#FFFFFF','transparent','#003F91'), sp=on(!B,'#003F91','#FFFFFF','transparent','#003F91');
+    const tb=on(B,'#FFFFFF','#003F91','transparent','#FFFFFF'), tp=on(!B,'#FFFFFF','#003F91','transparent','#FFFFFF');
+    return {
+      isA:dir==='a',isB:dir==='b',isC:dir==='c',isBudget:B,isPrices:!B,
+      goBudget:()=>this.go('budget'),goPrices:()=>this.go('prices'),
+      navB:B?'underline':'none',navP:B?'none':'underline',
+      tabB:tb.bg,tabBInk:tb.ink,tabP:tp.bg,tabPInk:tp.ink,
+      pillB:tb.bg,pillBInk:tb.ink,pillP:tp.bg,pillPInk:tp.ink,
+      swB:sb.bg,swBInk:sb.ink,swP:sp.bg,swPInk:sp.ink,
+      shift:-(y*0.6)-40, shiftRev:-600+y*0.6,
+      income, incomeF:money(income), needsF:money(income*.5), wantsF:money(income*.3), saveF:money(income*.2),
+      setIncome:e=>this.setState({income:+e.target.value}),
+      products:PRODUCTS.map((x,i)=>({name:x.n,pick:()=>this.setState({prod:i}),
+        bg:i===prod?'#003F91':(dir==='b'?'#FFFFFF':'transparent'),ink:i===prod?'#FFFFFF':'#003F91',
+        bgC:i===prod?'#5DA9E9':'transparent',inkC:i===prod?'#003F91':'#FFFFFF'})),
+      stores, best:STORES[cur.indexOf(min)], diffF:cents(max-min),
+      totals:STORES.map((name,i)=>({name,total:cents(tots[i]),bg:tots[i]===tMin?'#6D326D':'#E5F4E3',ink:tots[i]===tMin?'#FFFFFF':'#003F91'})),
+      basketBest:STORES[tots.indexOf(tMin)], basketDiffF:money(tMax-tMin),
+      dirs:[['a','1a','Editorial'],['b','1b','Bloques'],['c','1c','Inmersivo']].map(([k,id,label])=>({id,label,pick:()=>{this.setState({dir:k});window.scrollTo(0,0);},bg:dir===k?'#6D326D':'transparent',ink:dir===k?'#FFFFFF':'#003F91'}))
+    };
+  }
+}
+</script>
+</body>
+</html>
