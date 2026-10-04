@@ -3,7 +3,7 @@
 # `comuna` and `location_verified` are pinned by the store-location task (docs/store-locations.md).
 jumbo:
   name: Jumbo
-  enabled: false
+  enabled: true
   base_url: https://bff.jumbo.cl
   api_key: be-reg-groceries-jumbo-catalog-w54byfvkmju5
   store_ref: jumboclj512

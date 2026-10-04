@@ -1,0 +1,65 @@
+{
+  "products": [
+    {
+      "productId": "1621",
+      "slug": "arroz-grado-2-tucapel-1-kg-blue-bonnet-grano-largo-y-delgado",
+      "brand": "Tucapel",
+      "weightToUnit": false,
+      "items": [
+        {
+          "skuId": "1626",
+          "name": "Arroz Grado 2 Tucapel Blue Grano Largo y Delgado 1 kg",
+          "measurementUnit": "un",
+          "unitMultiplier": 1,
+          "price": 1810,
+          "listPrice": 1810,
+          "ppumPrice": 1810,
+          "ppumMeasurementUnit": "kg",
+          "stock": true,
+          "promotions": []
+        }
+      ]
+    },
+    {
+      "productId": "43160",
+      "slug": "arroz-grado-2-miraflores-1-kg",
+      "brand": "Miraflores",
+      "weightToUnit": false,
+      "items": [
+        {
+          "skuId": "43165",
+          "name": "Arroz Grado 2 Miraflores 1 kg",
+          "measurementUnit": "un",
+          "unitMultiplier": 1,
+          "price": 1290,
+          "listPrice": 1590,
+          "ppumPrice": 1290,
+          "ppumMeasurementUnit": "kg",
+          "stock": true,
+          "promotions": [{"name": "TCENCO OFERTA - 1150"}]
+        }
+      ]
+    },
+    {
+      "productId": "9001",
+      "slug": "trutro-entero-de-pollo-granel",
+      "brand": "Jumbo",
+      "weightToUnit": true,
+      "items": [
+        {
+          "skuId": "9002",
+          "name": "Trutro Entero de Pollo Granel",
+          "measurementUnit": "kg",
+          "unitMultiplier": 1,
+          "price": 3290,
+          "listPrice": 3290,
+          "ppumPrice": 3290,
+          "ppumMeasurementUnit": "kg",
+          "stock": false,
+          "promotions": []
+        }
+      ]
+    }
+  ],
+  "results": 3
+}
