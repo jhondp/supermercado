@@ -1,0 +1,88 @@
+{
+ "data": {
+  "results": [
+   {
+    "productId": "110607034",
+    "skuId": "110607035",
+    "displayName": "Arroz Tottus G2 Grano Largo Delgado 1 Kg",
+    "brand": "TOTTUS",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/110607034/arroz-tottus-g2-largo-fino-1-kg",
+    "measurements": {
+     "format": "1 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 6,
+     "limit": "Máximo 6 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.290"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.290"
+       ]
+      }
+     }
+    ],
+    "badges": [],
+    "promotions": [],
+    "sellerName": "Tottus"
+   },
+   {
+    "productId": "110609847",
+    "skuId": "110609848",
+    "displayName": "Arroz Tucapel G2 Grano Largo Ancho 1 Kg",
+    "brand": "TUCAPEL",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/110609847/arroz-g-2-gran-selec-poli-1-kl-tucapel",
+    "measurements": {
+     "format": "1 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 6,
+     "limit": "Máximo 6 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.890"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.890"
+       ]
+      }
+     }
+    ],
+    "badges": [],
+    "promotions": [],
+    "sellerName": "Tottus"
+   }
+  ],
+  "pagination": {
+   "count": 2,
+   "perPage": 48,
+   "totalPerPage": 2,
+   "currentPage": 1
+  },
+  "normalizedQuery": ""
+ },
+ "responseType": "Success"
+}

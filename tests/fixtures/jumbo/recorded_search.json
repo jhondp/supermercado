@@ -1,0 +1,580 @@
+{
+ "products": [
+  {
+   "productId": "1621",
+   "reference": "264603",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-tucapel-1-kg-blue-bonnet-grano-largo-y-delgado",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "25333",
+    "25334",
+    "28992",
+    "31249",
+    "31259"
+   ],
+   "brand": "Tucapel",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "1626",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 1810,
+     "listPrice": 1810,
+     "ppumPrice": 1810,
+     "ppumListPrice": 1810,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/298722-250-250/264603-01_1560.jpg?v=638775755988600000"
+     ],
+     "name": "Arroz Grado 2 Tucapel Blue Grano Largo y Delgado 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "1623",
+   "reference": "264594",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-tucapel-1-kg-gran-seleccion-grano-largo-y-ancho",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "22523",
+    "25422",
+    "28992",
+    "31249"
+   ],
+   "brand": "Tucapel",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "1628",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 2130,
+     "listPrice": 2130,
+     "ppumPrice": 2130,
+     "ppumListPrice": 2130,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/298723-250-250/Arroz-grado-2-gran-seleccion-grano-largo-y-ancho-1-kg.jpg?v=638775756003430000"
+     ],
+     "name": "Arroz Grado 2 Tucapel Gran Selección Grano Largo y Ancho 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "105035",
+   "reference": "1888809",
+   "sponsoredId": null,
+   "slug": "arroz-cuisine-and-co-g2-grano-largo-ancho1kg-1888809",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "31249",
+    "32220",
+    "32237"
+   ],
+   "brand": "Cuisine & Co",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "105303",
+     "cartLimit": 8,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 1750,
+     "listPrice": 1750,
+     "ppumPrice": 1750,
+     "ppumListPrice": 1750,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/374843-250-250/Arroz-grado-2-grano-largo-y-ancho-1-kg.jpg?v=638776801115270000"
+     ],
+     "name": "Arroz Grado 2 Cuisine & Co Grano Largo y Ancho 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "92364",
+   "reference": "1845787",
+   "sponsoredId": null,
+   "slug": "arroz-largo-fino-1-kg-cuisine-and-co-1845787",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "23329",
+    "28992",
+    "31249",
+    "31989",
+    "31991",
+    "31994",
+    "31999",
+    "32000",
+    "32004",
+    "32006",
+    "32008",
+    "32009"
+   ],
+   "brand": "Cuisine & Co",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "92628",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 1430,
+     "listPrice": 1430,
+     "ppumPrice": 1430,
+     "ppumListPrice": 1430,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/672171-250-250/Arroz-Grado-2-Cuisine---Co-Largo-y-Delgado-1-kg.jpg?v=639237057394800000"
+     ],
+     "name": "Arroz Grado 2 Cuisine & Co Largo y Delgado 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "1572",
+   "reference": "264587",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-banquete-1-kg-premium-grano-largo-y-ancho",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "25771",
+    "31249"
+   ],
+   "brand": "Banquete",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "1576",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 2330,
+     "listPrice": 2330,
+     "ppumPrice": 2330,
+     "ppumListPrice": 2330,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/298696-250-250/Arroz-Grado-2-Banquete-1-kg-Premium-Grano-Largo-y-Ancho.jpg?v=638775755566430000"
+     ],
+     "name": "Arroz Grado 2 Banquete Premium Grano Largo y Ancho 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "15088",
+   "reference": "506470",
+   "sponsoredId": null,
+   "slug": "arroz-miraflores-1-kg-grado-2-grano-largo-laminado",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "24968",
+    "25465",
+    "25670",
+    "31249",
+    "32220",
+    "32237",
+    "32319"
+   ],
+   "brand": "Miraflores",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "16420",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 2330,
+     "listPrice": 2330,
+     "ppumPrice": 2330,
+     "ppumListPrice": 2330,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/352365-250-250/Arroz-Miraflores-1-kg-grado-2-grano-largo-laminado.jpg?v=638776692638230000"
+     ],
+     "name": "Arroz Grado 2 Miraflores Grano Largo y Laminado 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "15441",
+   "reference": "1223046",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-maxima-1-kg-grano-largo-angosto",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "25771",
+    "31249"
+   ],
+   "brand": "Máxima",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "16773",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 890,
+     "listPrice": 890,
+     "ppumPrice": 890,
+     "ppumListPrice": 890,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/472958-250-250/1223046-01_15705.jpg?v=638871677404370000"
+     ],
+     "name": "Arroz Grado 2 Máxima Grano Largo Angosto 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "1624",
+   "reference": "264598",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-tucapel-1-kg-graneado-grano-largo-y-ancho",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "25771",
+    "31249"
+   ],
+   "brand": "Tucapel",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "1629",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 2130,
+     "listPrice": 2130,
+     "ppumPrice": 2130,
+     "ppumListPrice": 2130,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/298725-250-250/Arroz-Grado-2-Tucapel-1-kg-Graneado-Grano-largo-y-ancho.jpg?v=638775756040170000"
+     ],
+     "name": "Arroz Grado 2 Tucapel Grano Largo y Ancho Graneado 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "1571",
+   "reference": "1219645",
+   "sponsoredId": null,
+   "slug": "arroz-grado-1-banquete-2-kg-envase-degradable",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "25771",
+    "28992",
+    "31249"
+   ],
+   "brand": "Banquete",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "1575",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 2,
+     "price": 4730,
+     "listPrice": 4730,
+     "ppumPrice": 2365,
+     "ppumListPrice": 2365,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/298694-250-250/Arroz-grado-1-envase-degradable-2-kg.jpg?v=638775755530930000"
+     ],
+     "name": "Arroz Grado 1 Banquete Premium Grano Largo 2 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  },
+  {
+   "productId": "40151",
+   "reference": "1670111",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-tucapel-gran-seleccion-3-kg",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "31249"
+   ],
+   "brand": "Tucapel",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "43165",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 3,
+     "price": 6450,
+     "listPrice": 6450,
+     "ppumPrice": 2150,
+     "ppumListPrice": 2150,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vteximg.com.br/arquivos/ids/357266-250-250/Arroz-grado-2-Tucapel-gran-seleccion-3-kg.jpg?v=638776716698800000"
+     ],
+     "name": "Arroz Grado 2 Tucapel Grano Largo 3 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  }
+ ],
+ "redirect": "",
+ "facets": [],
+ "originalUrl": "",
+ "orderTypes": [
+  "OrderByRecommended",
+  "OrderByBestDiscountDESC",
+  "OrderByPriceDESC",
+  "OrderByPriceASC"
+ ],
+ "results": 10,
+ "metaTag": null,
+ "cmediaPlacements": [],
+ "metadata": {
+  "searchEngineRequest": "{\"sort_by\":\"relevance\",\"sort_order\":\"descending\",\"offset\":0,\"num_results_per_page\":39,\"pre_filter_expression\":{\"and\":[{\"and\":[{\"name\":\"storeId\",\"value\":\"jumboclj512\"},{\"name\":\"SellerVSS\",\"value\":\"jumboclj512\"}]},{\"or\":[{\"name\":\"outOfStock\",\"value\":\"False\"},{\"name\":\"ShowIfNotAvailable\",\"value\":\"True\"}]}]},\"fmt_options\":{\"show_hidden_fields\":false,\"variations_return_type\":\"matched\",\"groups_max_depth\":3,\"groups_start\":\"current\",\"show_hidden_facets\":false,\"show_protected_facets\":false},\"origin_referrer\":\"\",\"us\":[\"jumboclj512\"],\"section\":\"Products\",\"blacklist_rules\":true,\"term\":\"arroz grado 2\",\"features\":{\"query_items\":true,\"a_a_test\":false,\"auto_generated_refined_query_rules\":true,\"manual_searchandizing\":true,\"personalization\":true,\"filter_items\":true,\"use_reranker_service_for_search\":false,\"use_reranker_service_for_browse\":true,\"use_reranker_service_for_all\":false,\"custom_autosuggest_ui\":false,\"disable_test_only_global_rules_search\":false,\"disable_test_only_global_rules_browse\":false,\"use_enriched_attributes_as_fuzzy_searchable\":false,\"use_llm_label_sort\":false,\"recommendations_merge_allowlist_rules\":false,\"disable_test_only_tag_rules\":false,\"use_ces_blending\":false,\"enable_campaigns_context_selector_expression\":true,\"reranker_transformations_autocomplete\":false,\"variation_selection\":false,\"refined_tag_rules\":true,\"reranker_transformations_search\":false,\"reranker_transformations_browse\":true,\"enable_holdout_groups\":false},\"feature_variants\":{\"query_items\":\"query_items_ctr_and_l2r\",\"a_a_test\":null,\"auto_generated_refined_query_rules\":\"default_rules\",\"manual_searchandizing\":null,\"personalization\":\"default_personalization\",\"filter_items\":\"filter_items_w_atcs_and_purchases\",\"use_reranker_service_for_search\":null,\"use_reranker_service_for_browse\":\"browse_reranker_v0_rpv_price_top100\",\"use_reranker_service_for_all\":null,\"custom_autosuggest_ui\":null,\"disable_test_only_global_rules_search\":null,\"disable_test_only_global_rules_browse\":null,\"use_enriched_attributes_as_fuzzy_searchable\":null,\"use_llm_label_sort\":null,\"recommendations_merge_allowlist_rules\":null,\"disable_test_only_tag_rules\":null,\"use_ces_blending\":null,\"enable_campaigns_context_selector_expression\":null,\"reranker_transformations_autocomplete\":null,\"variation_selection\":null,\"refined_tag_rules\":null,\"reranker_transformations_search\":null,\"reranker_transformations_browse\":\"rpv_variations_base_price_browse\",\"enable_holdout_groups\":null},\"searchandized_items\":{}}"
+ }
+}

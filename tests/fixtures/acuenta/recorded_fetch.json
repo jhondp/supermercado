@@ -1,0 +1,19 @@
+{
+ "data": {
+  "getProductsBySKU": [
+   {
+    "name": "Arroz Grado 2 Grano Largo Bolsa 1 kg Tucapel",
+    "sku": "2411",
+    "brand": "Tucapel",
+    "price": 1150,
+    "unit": "Unidad",
+    "subUnit": "KG",
+    "subQty": 1,
+    "clickMultiplier": 1,
+    "stock": 968,
+    "isAvailable": true,
+    "promotion": null
+   }
+  ]
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "products": [
+  {
+   "productId": "7665",
+   "reference": "1223046",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-maxima-1-kg-grano-largo-angosto-1223046",
+   "soldBy": "santa-isabel",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "840"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "787",
+    "954",
+    "1135",
+    "1181",
+    "1226",
+    "1353",
+    "5156",
+    "10551",
+    "11644"
+   ],
+   "brand": "Máxima",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "7665",
+     "cartLimit": 6,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 870,
+     "listPrice": 870,
+     "ppumPrice": 870,
+     "ppumListPrice": 870,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://santaisabel.vtexassets.com/arquivos/ids/516668-250-250/1223046-01_15705.jpg?v=638871677390700000",
+      "https://santaisabel.vtexassets.com/arquivos/ids/184972-250-250/Arroz-grado-2-Maxima-1-kg-grano-largo-angosto.jpg?v=637704303166230000"
+     ],
+     "name": "Arroz Grado 2 Máxima Grano Largo Angosto 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  }
+ ],
+ "redirect": "",
+ "facets": [],
+ "originalUrl": "",
+ "orderTypes": [
+  "OrderByTopSaleDESC",
+  "OrderByBestDiscountDESC",
+  "OrderByPriceDESC",
+  "OrderByPriceASC",
+  "OrderByNameASC",
+  "OrderByNameDESC",
+  "OrderByReleaseDateDESC",
+  "OrderByRecommended"
+ ],
+ "results": 1,
+ "metaTag": null,
+ "cmediaPlacements": [],
+ "metadata": {}
+}

@@ -1,0 +1,77 @@
+{
+ "products": [
+  {
+   "productId": "1621",
+   "reference": "264603",
+   "sponsoredId": null,
+   "slug": "arroz-grado-2-tucapel-1-kg-blue-bonnet-grano-largo-y-delgado",
+   "soldBy": "Jumbo",
+   "isMarketplace": false,
+   "weightToUnit": false,
+   "categories": [
+    "27",
+    "30",
+    "497"
+   ],
+   "categoryNames": [
+    "Despensa",
+    "Arroz, Quinoa, Cuscús",
+    "Arroz"
+   ],
+   "collections": [
+    "25333",
+    "25334",
+    "28992",
+    "31249"
+   ],
+   "brand": "Tucapel",
+   "variant": [],
+   "event": null,
+   "items": [
+    {
+     "skuId": "1626",
+     "cartLimit": 12,
+     "measurementUnit": "un",
+     "unitMultiplier": 1,
+     "measurementUnitUn": "kg",
+     "unitMultiplierUn": 1,
+     "price": 1810,
+     "listPrice": 1810,
+     "ppumPrice": 1810,
+     "ppumListPrice": 1810,
+     "ppumConversion": 0,
+     "ppumMeasurementUnit": "kg",
+     "images": [
+      "https://jumbocl.vtexassets.com/arquivos/ids/298722-250-250/264603-01_1560.jpg?v=638775755988600000"
+     ],
+     "name": "Arroz Grado 2 Tucapel Blue Grano Largo y Delgado 1 kg",
+     "stock": true,
+     "promotions": [],
+     "pill": null
+    }
+   ],
+   "isGiftEligible": false,
+   "campaign": null,
+   "type": "SUPERMARKET",
+   "metaData": [],
+   "pharmacy": null
+  }
+ ],
+ "redirect": "",
+ "facets": [],
+ "originalUrl": "",
+ "orderTypes": [
+  "OrderByTopSaleDESC",
+  "OrderByBestDiscountDESC",
+  "OrderByPriceDESC",
+  "OrderByPriceASC",
+  "OrderByNameASC",
+  "OrderByNameDESC",
+  "OrderByReleaseDateDESC",
+  "OrderByRecommended"
+ ],
+ "results": 1,
+ "metaTag": null,
+ "cmediaPlacements": [],
+ "metadata": {}
+}

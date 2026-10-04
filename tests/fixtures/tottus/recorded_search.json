@@ -1,0 +1,274 @@
+{
+ "data": {
+  "results": [
+   {
+    "productId": "110609847",
+    "skuId": "110609848",
+    "displayName": "Arroz Tucapel G2 Grano Largo Ancho 1 Kg",
+    "brand": "TUCAPEL",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/110609847/arroz-g-2-gran-selec-poli-1-kl-tucapel",
+    "measurements": {
+     "format": "1 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 6,
+     "limit": "Máximo 6 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.890"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.890"
+       ]
+      }
+     }
+    ],
+    "badges": [],
+    "promotions": [],
+    "sellerName": "Tottus"
+   },
+   {
+    "productId": "110607034",
+    "skuId": "110607035",
+    "displayName": "Arroz Tottus G2 Grano Largo Delgado 1 Kg",
+    "brand": "TOTTUS",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/110607034/arroz-tottus-g2-largo-fino-1-kg",
+    "measurements": {
+     "format": "1 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 6,
+     "limit": "Máximo 6 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.290"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.290"
+       ]
+      }
+     }
+    ],
+    "badges": [],
+    "promotions": [],
+    "sellerName": "Tottus"
+   },
+   {
+    "productId": "118260628",
+    "skuId": "118260629",
+    "displayName": "ARROZ LARGO DELGADO  TOTTUS 1.8 KG",
+    "brand": "TOTTUS",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/118260628/arroz-largo-delgado-tottus-1-8-kg",
+    "measurements": {
+     "format": "1.8 GR",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 99,
+     "limit": "Máximo 99 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.000"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "556"
+       ]
+      }
+     }
+    ],
+    "badges": [],
+    "promotions": [],
+    "sellerName": "Tottus"
+   },
+   {
+    "productId": "113076125",
+    "skuId": "113076126",
+    "displayName": "Arroz Tottus G2 Largo Delgado 5 Kg",
+    "brand": "TOTTUS",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/113076125/arroz-largo-delgado-tottus-5-kg",
+    "measurements": {
+     "format": "5 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 99,
+     "limit": "Máximo 99 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "7.650"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.530"
+       ]
+      }
+     }
+    ],
+    "badges": [],
+    "promotions": [],
+    "sellerName": "Tottus"
+   },
+   {
+    "productId": "110610132",
+    "skuId": "110610134",
+    "displayName": "Arroz Tucapel Blue Bonnet G2 Grano Largo Angosto 1 Kg",
+    "brand": "TUCAPEL",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/110610132/arroz-g-2-largo-blue-bonet-1-kl",
+    "measurements": {
+     "format": "1 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 6,
+     "limit": "Máximo 6 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.290"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.290"
+       ]
+      }
+     },
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": true,
+      "type": "normalPrice",
+      "price": [
+       "1.810"
+      ]
+     }
+    ],
+    "badges": [
+     {
+      "position": 1,
+      "label": "Precios Increíbles",
+      "styles": {
+       "backgroundColor": "#000000",
+       "textColor": "#FFFFFF"
+      }
+     }
+    ],
+    "promotions": [],
+    "sellerName": "Tottus"
+   },
+   {
+    "productId": "130868974",
+    "skuId": "130868976",
+    "displayName": "Arroz American Thai Grano Largo G2 Bonanza 1 Kg",
+    "brand": "BONANZA",
+    "url": "https://www.tottus.cl/tottus-cl/articulo/130868974/arroz-g-2-importado-1-kl-b",
+    "measurements": {
+     "format": "1 KG",
+     "unit": "UN",
+     "minUnits": 1,
+     "maxUnits": 6,
+     "limit": "Máximo 6 Un."
+    },
+    "prices": [
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": false,
+      "type": "internetPrice",
+      "price": [
+       "1.350"
+      ],
+      "pum": {
+       "label": "KG",
+       "type": "pum",
+       "symbol": "$ ",
+       "price": [
+        "1.350"
+       ]
+      }
+     },
+     {
+      "label": "",
+      "icons": "",
+      "symbol": "$ ",
+      "crossed": true,
+      "type": "normalPrice",
+      "price": [
+       "1.590"
+      ]
+     }
+    ],
+    "badges": [
+     {
+      "position": 1,
+      "label": "Precios Increíbles",
+      "styles": {
+       "backgroundColor": "#000000",
+       "textColor": "#FFFFFF"
+      }
+     }
+    ],
+    "promotions": [],
+    "sellerName": "Tottus"
+   }
+  ],
+  "pagination": {
+   "count": 1000,
+   "perPage": 48,
+   "totalPerPage": 48,
+   "currentPage": 1
+  },
+  "normalizedQuery": "arroz grado 2"
+ },
+ "responseType": "Success"
+}
