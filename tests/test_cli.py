@@ -143,3 +143,20 @@ def test_propose_writes_a_pr_body_with_store_failures_and_lider_note(
     text = body.read_text(encoding="utf-8")
     assert "jumbo" in text and "BlockedError" in text
     assert "Lider" in text and "manual" in text
+
+
+def test_smoke_exit_code_reflects_failures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    from factories import make_store_config
+    from supermercado.config import AppConfig
+
+    config = AppConfig(
+        basket=[make_item()], stores={"jumbo": make_store_config("Jumbo", smoke_sku="1626")}
+    )
+    monkeypatch.setattr(cli, "load_config", lambda _path: config)
+    monkeypatch.setattr(
+        cli, "build_adapters", lambda _config, only=None: {"jumbo": FakeAdapter("jumbo")}
+    )
+    assert cli.main(["smoke"]) == 1
+    assert "FAILED" in capsys.readouterr().out

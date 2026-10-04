@@ -14,6 +14,7 @@ from supermercado.config import ConfigError, load_config
 from supermercado.pipeline.collect import collect, iso_week
 from supermercado.pipeline.propose import propose, render_pr_body, render_proposals
 from supermercado.pipeline.report import render_issue_body, report_to_dict
+from supermercado.pipeline.smoke import render_smoke_table, smoke
 from supermercado.pipeline.storage import previous_unit_prices, write_week
 from supermercado.site.build import build_site
 from supermercado.stores import build_adapters
@@ -41,6 +42,7 @@ def _parser() -> argparse.ArgumentParser:
     propose_cmd = sub.add_parser("propose", help="write candidate matches into matches.yaml")
     propose_cmd.add_argument("--store", help="propose for a single store")
     propose_cmd.add_argument("--body", type=Path, help="also write the pull request body here")
+    sub.add_parser("smoke", help="fetch one known SKU per store and check the response shape")
     return parser
 
 
@@ -103,11 +105,19 @@ def _cmd_propose(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_smoke(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    results = smoke(config, build_adapters(config))
+    sys.stdout.write(render_smoke_table(results))
+    return 0 if all(result.ok for result in results) else 1
+
+
 COMMANDS: dict[str, Callable[[argparse.Namespace], int]] = {
     "collect": _cmd_collect,
     "build": _cmd_build,
     "issue-body": _cmd_issue_body,
     "propose": _cmd_propose,
+    "smoke": _cmd_smoke,
 }
 
 

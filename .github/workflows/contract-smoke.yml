@@ -1,0 +1,57 @@
+name: contract-smoke
+
+on:
+  schedule:
+    - cron: "0 13 * * 4"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+
+      # Store error text is untrusted: it only travels through a file.
+      - name: Fetch one known SKU per store
+        id: smoke
+        run: |
+          mkdir -p build
+          set +e
+          uv run python -m supermercado smoke > build/smoke.md
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+          cat build/smoke.md
+
+      - name: Open or update the contract issue
+        if: steps.smoke.outputs.exit != '0'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            printf '## Store contract check failed\n\n'
+            if [ -s build/smoke.md ]; then
+              cat build/smoke.md
+            else
+              printf 'The smoke command crashed before printing a table, see run %s/%s/actions/runs/%s\n' \
+                "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+            fi
+          } > build/smoke-issue.md
+          gh label create contract-smoke --color D93F0B --force
+          number="$(gh issue list --label contract-smoke --state open --json number --jq '.[0].number')"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file build/smoke-issue.md
+          else
+            gh issue create --title "Store response contract changed" --label contract-smoke --body-file build/smoke-issue.md
+          fi
+
+      - name: Fail the run
+        if: steps.smoke.outputs.exit != '0'
+        run: exit 1

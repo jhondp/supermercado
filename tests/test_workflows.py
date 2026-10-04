@@ -113,3 +113,11 @@ def test_propose_job_has_its_own_least_privilege_and_body_from_file() -> None:
     assert pr["with"]["body-path"] == "build/proposal-body.md"
     assert "body" not in pr["with"]
     assert "${{" not in runs(job)
+
+
+def test_contract_smoke_is_scheduled_and_opens_an_issue() -> None:
+    workflow = load("contract-smoke.yml")
+    assert workflow["on"]["schedule"][0]["cron"] == "0 13 * * 4"
+    script = runs(workflow["jobs"]["smoke"])
+    assert "python -m supermercado smoke" in script
+    assert "contract-smoke" in script
