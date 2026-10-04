@@ -121,3 +121,36 @@ def test_contract_smoke_is_scheduled_and_opens_an_issue() -> None:
     script = runs(workflow["jobs"]["smoke"])
     assert "python -m supermercado smoke" in script
     assert "contract-smoke" in script
+
+
+def test_ci_runs_on_pull_requests_and_pushes_to_main() -> None:
+    workflow = load("ci.yml")
+    assert "pull_request" in workflow["on"]
+    assert workflow["on"]["push"]["branches"] == ["main"]
+    assert workflow["permissions"] == {"contents": "read"}
+
+
+def test_ci_lints_tests_and_builds_the_site_with_pinned_actions() -> None:
+    workflow = load("ci.yml")
+    weekly_uses = {
+        step["uses"]
+        for job in load("weekly.yml")["jobs"].values()
+        for step in job["steps"]
+        if "uses" in step
+    }
+    for job in workflow["jobs"].values():
+        uses = [step["uses"] for step in job["steps"] if "uses" in step]
+        assert "actions/checkout@v4" in uses
+        assert any(u.startswith("astral-sh/setup-uv@") for u in uses)
+        assert set(uses) <= weekly_uses
+        script = runs(job)
+        assert "${{" not in script
+        for fragment in (
+            "uv sync",
+            "uv run ruff check .",
+            "uv run ruff format --check .",
+            "uv run pytest -q",
+            'uv run python -m supermercado --data "$RUNNER_TEMP/empty" build '
+            '--out "$RUNNER_TEMP/dist"',
+        ):
+            assert fragment in script
