@@ -146,6 +146,50 @@ def _one_item(**fields) -> str:
     return json.dumps({"products": [{"slug": "x", "items": [item]}]})
 
 
+# Live BFF promotions carry trailing campaign text after the amount, so the amount in the label
+# is not at the end; the structured fields (paymentMethods, unitPrice) are authoritative.
+LIVE_CARD_PROMO = {
+    "name": "TCENCO OFERTA - 1150 SISA CAF : LPT LPT TRIMESTRAL 01102026 AL 08102026 ",
+    "description": "LPT",
+    "type": "nominal",
+    "unitPrice": 1150,
+    "mQuantity": 1,
+    "paymentMethods": "CENCOSUD_CARD",
+    "userProperties": "ALL",
+}
+LIVE_OPEN_PROMO = {
+    "name": "TMP OFERTA - 1250 SISA CAF : LPT LPT TRIMESTRAL 01102026 AL 08102026 ",
+    "description": "LPT",
+    "type": "nominal",
+    "unitPrice": 1250,
+    "mQuantity": 1,
+    "paymentMethods": "ALL",
+    "userProperties": "ALL",
+}
+
+
+def test_card_price_comes_from_structured_cencosud_card_promotion() -> None:
+    adapter, _ = make_adapter(
+        ok(_one_item(price=1250, listPrice=1350, promotions=[LIVE_OPEN_PROMO, LIVE_CARD_PROMO]))
+    )
+    [listing] = adapter.search("x")
+    assert (listing.price, listing.promo_price, listing.card_price) == (1350, 1250, 1150)
+
+
+def test_open_promotion_is_never_a_card_price() -> None:
+    adapter, _ = make_adapter(
+        ok(_one_item(price=1250, listPrice=1350, promotions=[LIVE_OPEN_PROMO]))
+    )
+    [listing] = adapter.search("x")
+    assert (listing.price, listing.promo_price, listing.card_price) == (1350, 1250, None)
+
+
+def test_card_promotion_unit_price_must_be_below_regular() -> None:
+    promo = {**LIVE_CARD_PROMO, "unitPrice": 1350}
+    adapter, _ = make_adapter(ok(_one_item(price=1350, listPrice=1350, promotions=[promo])))
+    assert adapter.search("x")[0].card_price is None
+
+
 @pytest.mark.parametrize(
     "body",
     [

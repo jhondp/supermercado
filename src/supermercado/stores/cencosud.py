@@ -19,6 +19,12 @@ from supermercado.stores.base import (
 )
 
 BATCH_SIZE = 40
+# Live promotions (2026-10-04) look like
+#   {"name": "TCENCO OFERTA - 1150 SISA CAF : LPT ...", "unitPrice": 1150,
+#    "paymentMethods": "CENCOSUD_CARD", "mQuantity": 1, ...}
+# `paymentMethods` + `unitPrice` are authoritative; the label regex is a fallback for older shapes
+# where the amount closes the label ("TCENCO OFERTA - 1150").
+_CARD_PAYMENT_METHOD = "CENCOSUD_CARD"
 _CARD_PROMO_RE = re.compile(r"-\s*\$?\s*(\d[\d.]*)\s*$")
 _CARD_PROMO_MARKERS = ("TCENCO", "TARJETA")
 
@@ -30,16 +36,23 @@ def _positive_int(value: Any) -> int | None:
     return amount if amount > 0 else None
 
 
+def _is_card_promo(promo: dict[str, Any], label: str) -> bool:
+    if _CARD_PAYMENT_METHOD in str(promo.get("paymentMethods") or "").upper():
+        return True
+    return any(marker in label.upper() for marker in _CARD_PROMO_MARKERS)
+
+
 def _card_price(promotions: list[dict[str, Any]], regular: int | None) -> int | None:
     found = []
     for promo in promotions:
         label = str(promo.get("name") or promo.get("description") or "")
-        if not any(marker in label.upper() for marker in _CARD_PROMO_MARKERS):
+        if not _is_card_promo(promo, label):
             continue
-        if match := _CARD_PROMO_RE.search(label):
+        amount = _positive_int(promo.get("unitPrice"))
+        if amount is None and (match := _CARD_PROMO_RE.search(label)):
             amount = int(match.group(1).replace(".", ""))
-            if regular is not None and 0 < amount < regular:
-                found.append(amount)
+        if amount is not None and regular is not None and 0 < amount < regular:
+            found.append(amount)
     return min(found) if found else None
 
 
