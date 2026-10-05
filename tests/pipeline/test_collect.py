@@ -187,3 +187,22 @@ def test_store_without_matches_is_not_fetched() -> None:
     )
     assert lider.fetched == []
     assert result.collected_stores == {"jumbo"}
+
+
+def test_iso_week_uses_santiago_local_time_late_sunday() -> None:
+    # Sunday 22:20 Santiago (UTC-3) is already Monday in UTC, but still week 40.
+    assert iso_week(datetime(2026, 10, 5, 1, 20, tzinfo=UTC)) == "2026-W40"
+
+
+def test_iso_week_uses_santiago_local_time_early_monday() -> None:
+    # 00:30 Santiago Monday starts week 41.
+    assert iso_week(datetime(2026, 10, 5, 3, 30, tzinfo=UTC)) == "2026-W41"
+
+
+def test_iso_week_midweek_unchanged() -> None:
+    assert iso_week(datetime(2026, 10, 1, 12, 0, tzinfo=UTC)) == "2026-W40"
+
+
+def test_iso_week_rejects_naive_datetime() -> None:
+    with pytest.raises(ValueError, match="naive"):
+        iso_week(datetime(2026, 10, 5, 1, 20))

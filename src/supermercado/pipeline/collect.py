@@ -5,7 +5,8 @@ from __future__ import annotations
 import logging
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 from supermercado.config import AppConfig
 from supermercado.domain.models import PriceObservation, Status
@@ -15,6 +16,9 @@ from supermercado.stores.base import StoreAdapter
 log = logging.getLogger(__name__)
 
 EMPTY_RESULT_REASONS = 3
+
+# Weeks and "today" are labelled in the reference location's local time, never UTC.
+REFERENCE_TZ = ZoneInfo("America/Santiago")
 
 
 class EmptyResult(Exception):
@@ -48,8 +52,15 @@ class CollectResult:
     collected_stores: set[str] = field(default_factory=set)
 
 
+def local_date(moment: datetime) -> date:
+    """Calendar date of an aware moment in the reference timezone."""
+    if moment.tzinfo is None or moment.utcoffset() is None:
+        raise ValueError("naive datetime not allowed: pass a timezone-aware moment")
+    return moment.astimezone(REFERENCE_TZ).date()
+
+
 def iso_week(moment: datetime) -> str:
-    year, week, _ = moment.isocalendar()
+    year, week, _ = local_date(moment).isocalendar()
     return f"{year}-W{week:02d}"
 
 

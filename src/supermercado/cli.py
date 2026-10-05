@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from supermercado.config import ConfigError, load_config
-from supermercado.pipeline.collect import collect, iso_week
+from supermercado.pipeline.collect import collect, iso_week, local_date
 from supermercado.pipeline.propose import propose, render_pr_body, render_proposals
 from supermercado.pipeline.report import render_issue_body, report_to_dict
 from supermercado.pipeline.smoke import render_smoke_table, smoke
@@ -87,7 +87,7 @@ def _cmd_propose(args: argparse.Namespace) -> int:
     path = args.config / "matches.yaml"
     path.write_text(
         render_proposals(
-            path.read_text(encoding="utf-8"), proposals, week=iso_week(now), today=now.date()
+            path.read_text(encoding="utf-8"), proposals, week=iso_week(now), today=local_date(now)
         ),
         encoding="utf-8",
     )
