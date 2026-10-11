@@ -1,4 +1,4 @@
-# Basic basket: 23 items. Sizes are expressed in each item's normalization unit.
+# Basic basket: 36 items. Sizes are expressed in each item's normalization unit.
 # unit: kg | l | m | unit
 - id: rice
   name: Arroz grado 2 (1 kg)
@@ -90,6 +90,24 @@
   rules:
     size_range: [0.17, 0.17]
     exclude: [grano, molido, capsulas, descafeinado, cappuccino]
+- id: oats
+  name: Avena (1 kg)
+  category: pantry
+  unit: kg
+  reference_qty: 1.0
+  search: "avena 1 kg"
+  rules:
+    size_range: [0.5, 1.0]
+    exclude: [bebida, barra, galleta, granola, "sin gluten", salvado, harina, cereal, frutas]
+- id: canned_mackerel
+  name: Jurel en lata (425 g)
+  category: pantry
+  unit: kg
+  reference_qty: 0.425
+  search: "jurel 425 g"
+  rules:
+    size_range: [0.4, 0.425]
+    exclude: [salsa, tomate, aceite, ahumado, lomitos, pate, desmenuzado]
 - id: whole_milk
   name: Leche entera (1 L)
   category: dairy_eggs
@@ -108,6 +126,24 @@
   rules:
     size_range: [12, 12]
     exclude: [codorniz]
+- id: butter
+  name: Mantequilla (250 g)
+  category: dairy_eggs
+  unit: kg
+  reference_qty: 0.25
+  search: "mantequilla 250 g"
+  rules:
+    size_range: [0.25, 0.25]
+    exclude: [margarina, untable, "sin sal", "sin lactosa", light, ghee, vegetal, mani, cacao]
+- id: yogurt
+  name: Yogurt batido (125 g)
+  category: dairy_eggs
+  unit: kg
+  reference_qty: 0.125
+  search: "yogurt batido 125 g"
+  rules:
+    size_range: [0.11, 0.125]
+    exclude: [griego, "sin lactosa", proteina, protein, light, "0%", bebible, vegetal, trozos, cereal]
 - id: bread
   name: Pan marraqueta o hallulla a granel (1 kg)
   category: bakery
@@ -116,6 +152,15 @@
   search: "marraqueta"
   rules:
     exclude: [integral, congelada, envasada]
+- id: sliced_bread
+  name: Pan de molde blanco (600 g)
+  category: bakery
+  unit: kg
+  reference_qty: 0.6
+  search: "pan de molde blanco"
+  rules:
+    size_range: [0.5, 0.75]
+    exclude: [integral, multigrano, linaza, avena, centeno, "sin gluten", "sin orillas", "sin corteza", brioche, hamburguesa, "hot dog", light]
 - id: chicken_thigh
   name: Trutro entero de pollo a granel (1 kg)
   category: meat
@@ -140,6 +185,63 @@
   search: "posta granel"
   rules:
     exclude: [cerdo, pollo, congelada, molida]
+- id: potato
+  name: Papa a granel (1 kg)
+  category: produce
+  unit: kg
+  reference_qty: 1.0
+  search: "papa granel"
+  rules:
+    exclude: [chips, prefrita, prefritas, congelada, congeladas, pure, fritas, camote, dulce, deshidratada]
+- id: onion
+  name: Cebolla a granel (1 kg)
+  category: produce
+  unit: kg
+  reference_qty: 1.0
+  search: "cebolla granel"
+  rules:
+    exclude: [morada, perla, cebollin, "en polvo", deshidratada, frita, caramelizada, encurtida, escabeche]
+- id: tomato
+  name: Tomate a granel (1 kg)
+  category: produce
+  unit: kg
+  reference_qty: 1.0
+  search: "tomate granel"
+  rules:
+    exclude: [salsa, pasta, triturado, pelado, cherry, conserva, deshidratado, seco, ketchup]
+- id: carrot
+  name: Zanahoria a granel (1 kg)
+  category: produce
+  unit: kg
+  reference_qty: 1.0
+  search: "zanahoria granel"
+  rules:
+    exclude: [baby, rallada, cubos, bastones, jugo, congelada, mix]
+- id: lettuce
+  name: Lechuga (1 unidad)
+  category: produce
+  unit: unit
+  reference_qty: 1
+  search: "lechuga"
+  rules:
+    size_range: [1, 1]
+    exclude: [mix, ensalada, baby, brotes, lista, semillas]
+- id: banana
+  name: Plátano a granel (1 kg)
+  category: produce
+  unit: kg
+  reference_qty: 1.0
+  search: "platano granel"
+  rules:
+    exclude: [chips, deshidratado, frito, jugo, nectar, verde, macho]
+- id: apple
+  name: Manzana a granel (1 kg)
+  category: produce
+  unit: kg
+  reference_qty: 1.0
+  search: "manzana granel"
+  rules:
+    exclude: [jugo, compota, vinagre, nectar, deshidratada, chips, pure, bebida]
 - id: laundry_detergent
   name: Detergente líquido (3 L)
   category: cleaning
@@ -202,3 +304,12 @@
   rules:
     size_range: [0.08, 0.5]
     exclude: [liquido, ropa, repuesto]
+- id: diapers
+  name: Pañales talla G (50 unidades)
+  category: hygiene
+  unit: unit
+  reference_qty: 50
+  search: "panales talla g"
+  rules:
+    size_range: [20, 120]
+    exclude: [adulto, xg, xxg, xxxg, pants, calzoncito, toallitas, humedas, aposito]

@@ -27,6 +27,7 @@ CATEGORY_LABELS = {
     Category.DAIRY_EGGS: "Lácteos y huevos",
     Category.BAKERY: "Panadería",
     Category.MEAT: "Carnes",
+    Category.PRODUCE: "Frutas y verduras",
     Category.CLEANING: "Limpieza",
     Category.HYGIENE: "Higiene",
 }
@@ -184,6 +185,9 @@ def _write(path: Path, html: str) -> None:
 def render_site(config: AppConfig, observations: Sequence[PriceObservation], out_dir: Path) -> None:
     stores = config.enabled_stores()
     names = {store: cfg.name for store, cfg in config.stores.items()}
+    # Items nobody has matched yet (e.g. just added to the basket) cannot be priced
+    # anywhere, so they are left out of the coverage base instead of failing every store.
+    ranked_basket = config.matched_items()
     weeks = sorted({o.week for o in observations})
     latest_week = weeks[-1] if weeks else None
     previous_week = weeks[-2] if len(weeks) > 1 else None
@@ -196,13 +200,14 @@ def render_site(config: AppConfig, observations: Sequence[PriceObservation], out
         "stores": stores,
         "comunas": {store: config.stores[store].comuna for store in stores},
         "basket_size": len(config.basket),
-        "min_items": math.ceil(MIN_COVERAGE * len(config.basket)),
+        "coverage_base": len(ranked_basket),
+        "min_items": math.ceil(MIN_COVERAGE * len(ranked_basket)),
     }
     env = _environment()
     out_dir.mkdir(parents=True, exist_ok=True)
     shutil.copytree(PACKAGE_DIR / "static", out_dir / "static", dirs_exist_ok=True)
 
-    ranking = rank_stores(current, previous, config.basket, stores, min_coverage=MIN_COVERAGE)
+    ranking = rank_stores(current, previous, ranked_basket, stores, min_coverage=MIN_COVERAGE)
     _write(
         out_dir / "index.html",
         env.get_template("index.html").render(root="./", page="home", ranking=ranking, **common),

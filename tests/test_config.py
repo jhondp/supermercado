@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from factories import make_config, make_item, make_match
+from factories import make_config, make_item, make_match, make_store_config
 from supermercado.config import ConfigError, load_config
 from supermercado.domain.models import Category
 
@@ -38,9 +38,9 @@ def write_config(tmp_path: Path, *, matches: str = "", basket: str = BASKET) -> 
 
 def test_repository_config_loads_the_full_basket() -> None:
     config = load_config(CONFIG_DIR)
-    assert len(config.basket) == 23
+    assert len(config.basket) == 36
     assert {item.category for item in config.basket} == set(Category)
-    assert len({item.id for item in config.basket}) == 23
+    assert len({item.id for item in config.basket}) == 36
     assert all(item.search.strip() for item in config.basket)
     assert isinstance(config.matches, dict)
     assert list(config.stores) == ["jumbo", "santa_isabel", "tottus", "acuenta", "unimarc", "lider"]
@@ -100,6 +100,30 @@ def test_matches_for_store_follows_basket_order() -> None:
         matches={"milk": {"jumbo": make_match("2")}, "rice": {"jumbo": make_match("1")}},
     )
     assert list(config.matches_for_store("jumbo")) == ["rice", "milk"]
+
+
+def test_matched_items_skips_items_without_any_approved_match() -> None:
+    config = make_config(
+        items=[make_item("rice"), make_item("potato"), make_item("milk")],
+        matches={"milk": {"lider": make_match("2")}, "rice": {"jumbo": make_match("1")}},
+    )
+    assert [item.id for item in config.matched_items()] == ["rice", "milk"]
+
+
+def test_matched_items_ignores_matches_at_disabled_stores() -> None:
+    config = make_config(
+        items=[make_item("rice"), make_item("milk")],
+        matches={"milk": {"lider": make_match("2")}, "rice": {"jumbo": make_match("1")}},
+    )
+    config = config.model_copy(
+        update={
+            "stores": {
+                "jumbo": make_store_config("Jumbo"),
+                "lider": make_store_config("Lider", enabled=False),
+            }
+        }
+    )
+    assert [item.id for item in config.matched_items()] == ["rice"]
 
 
 def test_enabled_stores_keeps_file_order() -> None:

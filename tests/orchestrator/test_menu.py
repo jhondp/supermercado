@@ -191,7 +191,7 @@ def test_approve_suggested_skip_and_manual(paths: Paths) -> None:
     shown = text(out)
     assert "Arroz Uno 1 kg" in shown
     assert "$870/kg" in shown
-    assert "Jumbo: 2/23" in shown
+    assert "Jumbo: 2/36" in shown
 
 
 def test_approve_choose_number_then_quit_saves_what_was_chosen(paths: Paths) -> None:
