@@ -145,6 +145,21 @@ def test_methodology_explains_the_coverage_rule(built: Path) -> None:
     assert "todos los supermercados con datos" not in html
 
 
+def test_unmatched_new_items_do_not_count_toward_coverage(tmp_path: Path) -> None:
+    potato = make_item("potato", category=Category.PRODUCE, name="Papa a granel (1 kg)")
+    config = site_config().model_copy(update={"basket": [*ITEMS, potato]})
+    dist = build(tmp_path, observations(lider_milk=True), config)
+    html = read(dist / "index.html")
+    ranking = html.split('<ol class="ranking">')[1].split("</ol>")[0]
+    assert "Jumbo" in ranking and "Lider" in ranking
+    assert "cobertura insuficiente esta semana" not in html
+    assert "Comparando 3 de 4 productos" in html
+    assert "3 de 3 productos" in read(dist / "metodologia" / "index.html")
+    products = read(dist / "productos" / "index.html")
+    assert 'data-category="produce"' in products
+    assert "Frutas y verduras" in products
+
+
 def test_products_table_highlights_cheapest_and_explains_gaps(built: Path) -> None:
     html = read(built / "productos" / "index.html")
     assert '<td class="best">$1.190/kg</td>' in html
@@ -177,7 +192,7 @@ def test_build_with_no_data_renders_empty_state(tmp_path: Path) -> None:
     config = load_config(CONFIG_DIR)
     build_site(config, tmp_path / "data", tmp_path / "dist")
     assert "Aún no hay datos" in read(tmp_path / "dist" / "index.html")
-    assert len(list((tmp_path / "dist" / "producto").iterdir())) == 23
+    assert len(list((tmp_path / "dist" / "producto").iterdir())) == 36
 
 
 def _rice_page(tmp_path: Path, extra, *, config=None) -> str:

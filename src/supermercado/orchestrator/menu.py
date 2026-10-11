@@ -199,7 +199,7 @@ class App:
     def collect(self) -> bool:
         self.say(
             "Consulta el precio de cada SKU aprobado y guarda la semana en data/prices/.",
-            "~1,5 s por solicitud: unos 35 s por súper con 23 productos.",
+            "~1,5 s por solicitud: casi 1 minuto por súper con 36 productos.",
         )
         store = self._choose_store(STORE_ORDER)
         before = self._report_mtime()

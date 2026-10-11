@@ -61,6 +61,11 @@ class AppConfig(BaseModel):
             if store in self.matches.get(item.id, {})
         }
 
+    def matched_items(self) -> list[BasketItem]:
+        """Basket items with an approved SKU in at least one enabled store, in basket order."""
+        enabled = set(self.enabled_stores())
+        return [item for item in self.basket if enabled & self.matches.get(item.id, {}).keys()]
+
     def enabled_stores(self) -> list[str]:
         return [store for store, cfg in self.stores.items() if cfg.enabled]
 

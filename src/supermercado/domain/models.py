@@ -31,6 +31,7 @@ class Category(StrEnum):
     DAIRY_EGGS = "dairy_eggs"
     BAKERY = "bakery"
     MEAT = "meat"
+    PRODUCE = "produce"
     CLEANING = "cleaning"
     HYGIENE = "hygiene"
 

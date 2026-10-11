@@ -43,8 +43,8 @@ def test_fresh_project_status(paths: Paths) -> None:
     status = compute_status(paths, now=NOW)
     assert list(status.approved) == list(STORE_ORDER)
     assert set(status.approved.values()) == {0}
-    assert status.basket_size == 23
-    assert status.threshold == 19
+    assert status.basket_size == 36
+    assert status.threshold == 29
     assert status.pending == 4
     assert status.proposal_week == "2026-W40"
     assert status.last_week is None

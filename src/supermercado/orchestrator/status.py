@@ -71,6 +71,7 @@ def compute_status(paths: Paths, *, now: datetime) -> Status:
     except ConfigError as exc:
         config_error = str(exc)
     else:
+        # Full basket is the approval target; site ranks matched items (decision log 2026-10-11).
         basket_size = len(config.basket)
         store_names.update({store: cfg.name for store, cfg in config.stores.items()})
         for item_id, per_store in config.matches.items():
